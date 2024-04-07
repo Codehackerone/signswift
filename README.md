@@ -1,1 +1,1 @@
-# signswift.ai
+# signswift
