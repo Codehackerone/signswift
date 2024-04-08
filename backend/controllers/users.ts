@@ -98,9 +98,7 @@ export const getDetails = async (
         return next(new ExpressError("User not found!", 404));
     }
 
-    const { name, username, email, phoneNumber, history } = user;
+    const { name, username, email, phoneNumber, videos } = user;
 
-    return res
-        .status(200)
-        .json({ name, username, email, phoneNumber, history });
+    return res.status(200).json({ name, username, email, videos, phoneNumber });
 };
