@@ -17,6 +17,7 @@ export const register = async (
         return next(new ExpressError("Missing parameters!", 400));
     }
 
+    // Fetch user from database
     const user = await User.findOne({ email });
 
     // Check the user already exists or not
@@ -56,6 +57,7 @@ export const login = async (
         return next(new ExpressError("Missing parameters!", 400));
     }
 
+    // Fetch user from database
     const user = await User.findOne({ email });
 
     // Check the user exists or not
@@ -90,14 +92,17 @@ export const getDetails = async (
     res: Response,
     next: NextFunction
 ) => {
+    // Get user id from locals (set up through middleware)
     const userId = res.locals.data.id;
-
+    // Fetch user from database
     const user = await User.findById(userId);
 
+    // Check if user is present or not
     if (!user) {
         return next(new ExpressError("User not found!", 404));
     }
 
+    // Destucture data from user
     const { name, username, email, phoneNumber, videos } = user;
 
     return res.status(200).json({ name, username, email, videos, phoneNumber });
