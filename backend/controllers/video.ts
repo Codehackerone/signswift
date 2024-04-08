@@ -83,3 +83,35 @@ export const deleteAllVideos = async (
 
     return res.status(200).json({ message: "Videos deleted successfully!" });
 };
+
+export const updateVideoDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Get user id from locals (set up through middleware)
+    const userId = res.locals.data.id;
+    // Get video id and details from request body
+    const { videoId, inference } = req.body;
+
+    // Check for missing parameters
+    if (!videoId || !inference) {
+        return next(new ExpressError("Missing parameters!", 400));
+    }
+
+    // Fetch user from database and update the video data having id as videoId
+    await User.findOneAndUpdate(
+        { _id: userId, "videos._id": videoId },
+        {
+            $set: {
+                "videos.$.inference": inference,
+                "videos.$.processed": true
+            }
+        },
+        { runValidators: true }
+    );
+
+    return res
+        .status(200)
+        .json({ message: "Video details updated successfully!" });
+};
