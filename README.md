@@ -13,4 +13,4 @@
 -   **(GET) /api/videos** - Get all videos of a user **(required: auth token)**
 -   **(POST) /api/videos** - Add new video for a user **(required: auth token)**
 -   **(DELETE) /api/videos** - Delete all videos of a user **(required: auth token)**
--   **(PUT) /api/videos** - Update video with inference **(required: auth token, videoId)**
+-   **(PUT) /api/videos** - Update video with inference **(required: userId, videoId, inference array)**
