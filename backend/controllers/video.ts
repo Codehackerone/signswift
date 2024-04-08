@@ -3,6 +3,7 @@ import User from "../models/users";
 import ExpressError from "../utils/ExpressError";
 import { Multer } from "multer";
 import { uploadVideo } from "../utils/videoUpload";
+import { Inference } from "../models/videos";
 
 export const getAllVideos = async (
     req: Request,
@@ -59,6 +60,7 @@ export const addVideo = async (
     res.status(200).json({
         message: "Videos uploaded successfully!",
         url: videoURL,
+        userId,
         videoId: user.videos[user.videos.length - 1]._id
     });
 };
@@ -89,13 +91,15 @@ export const updateVideoDetails = async (
     res: Response,
     next: NextFunction
 ) => {
-    // Get user id from locals (set up through middleware)
-    const userId = res.locals.data.id;
-    // Get video id and details from request body
-    const { videoId, inference } = req.body;
+    // Get user id, video id and details from request body
+    const {
+        userId,
+        videoId,
+        inference
+    }: { userId: string; videoId: string; inference: Inference[] } = req.body;
 
     // Check for missing parameters
-    if (!videoId || !inference) {
+    if (!userId || !videoId || !inference) {
         return next(new ExpressError("Missing parameters!", 400));
     }
 
@@ -104,7 +108,7 @@ export const updateVideoDetails = async (
         { _id: userId, "videos._id": videoId },
         {
             $set: {
-                "videos.$.inference": inference,
+                "videos.$.inferences": inference,
                 "videos.$.processed": true
             }
         },

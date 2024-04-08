@@ -16,6 +16,6 @@ router
     .get(verifyToken, catchAsync(getAllVideos))
     .post(verifyToken, uploader.single("file"), catchAsync(addVideo))
     .delete(verifyToken, catchAsync(deleteAllVideos))
-    .put(verifyToken, catchAsync(updateVideoDetails));
+    .put(catchAsync(updateVideoDetails));
 
 export default router;
