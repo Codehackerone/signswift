@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 import userRoutes from "./routes/user";
-import historyRoutes from "./routes/history";
+import videoRoutes from "./routes/video";
 import ExpressError from "./utils/ExpressError";
 
 dotenv.config();
@@ -20,8 +20,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
-app.use("/api/history", historyRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/videos", videoRoutes);
 
 app.use(
     (err: ExpressError, req: Request, res: Response, next: NextFunction) => {
