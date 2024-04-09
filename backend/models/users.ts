@@ -31,7 +31,8 @@ const User = model<User, UserModelType>(
                 processed: {
                     type: Boolean,
                     default: false
-                }
+                },
+                publicId: { type: String }
             })
         ]
     })

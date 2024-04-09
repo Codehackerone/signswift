@@ -7,6 +7,7 @@ export interface Inference {
 
 export interface Video {
     url: string;
+    publicId: string;
     processed: boolean;
     inferences: Types.DocumentArray<Inference>;
 }
