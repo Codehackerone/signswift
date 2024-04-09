@@ -167,6 +167,16 @@ export const deleteVideo = async (
         }
     });
 
+    // public id is not found, means the video id doesn't belong to authenticated user
+    if (!publicId) {
+        return next(
+            new ExpressError(
+                "You don't have permission to delete this video",
+                403
+            )
+        );
+    }
+
     // Delete the video from cloudinary with the computed public Id
     await deleteVideoFromCloudinary(publicId);
 
