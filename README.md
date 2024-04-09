@@ -10,7 +10,10 @@
 
 ### Video APIs
 
--   **(GET) /api/videos** - Get all videos of a user **(required: auth token)**
--   **(POST) /api/videos** - Add new video for a user **(required: auth token)**
--   **(DELETE) /api/videos** - Delete all videos of a user **(required: auth token)**
--   **(PUT) /api/videos** - Update video with inference **(required: userId, videoId, inference array)**
+-   **(GET) /api/videos/all** - Get details of all videos **(required: auth token)**
+-   **(DELETE) /api/videos/all** - Delete all videos **(required: auth token)**
+    <br/><br/>
+-   **(GET) /api/videos** - Get details of a video **(required: auth token, video id)**
+-   **(POST) /api/videos** - Add new video **(required: auth token, video file)**
+-   **(DELETE) /api/videos** - Delete a video **(required: auth token, video id)**
+-   **(PUT) /api/videos** - Update a video **(required: user id, video id, inference array)**
