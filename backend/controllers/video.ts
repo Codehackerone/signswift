@@ -66,7 +66,11 @@ export const getVideo = async (
         });
     }
 
-    return res.status(422).json({ message: "Incorrect video id!", video: {} });
+    return res.status(403).json({
+        message:
+            "Invalid video id / You don't have permission to get details of this video",
+        video: {}
+    });
 };
 
 export const addVideo = async (
@@ -92,21 +96,16 @@ export const addVideo = async (
     }
 
     // Upload the video to Cloudinary
-    const response = await uploadVideoToCloudinary(file.path);
-
-    // Get the hosted video URL
-    const videoURL = response?.secure_url;
-    // Get the public Id
-    const publicId = response.public_id;
+    const { url, publicId } = await uploadVideoToCloudinary(file.path);
 
     // Add the new video to the current user array
-    user.videos.push({ url: videoURL, publicId });
+    user.videos.push({ url, publicId });
     // Save the updated user
     await user.save();
 
     res.status(200).json({
         message: "Videos uploaded successfully!",
-        url: videoURL,
+        url,
         userId,
         videoId: user.videos[user.videos.length - 1]._id
     });

@@ -20,7 +20,10 @@ export const uploadVideoToCloudinary = async (filePath: string) => {
         folder: process.env.CLOUDINARY_FOLDER,
         resource_type: "video"
     });
-    return cloudinaryResponse;
+    return {
+        url: cloudinaryResponse.secure_url,
+        publicId: cloudinaryResponse.public_id
+    };
 };
 
 export const deleteVideoFromCloudinary = async (publicId: string) => {
