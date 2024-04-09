@@ -9,7 +9,7 @@ import {
 } from "../controllers/video";
 import catchAsync from "../utils/catchAsync";
 import { verifyToken } from "../middleware";
-import { uploader } from "../utils/videoUpload";
+import { uploader } from "../utils/video";
 
 const router = express.Router();
 
