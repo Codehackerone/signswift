@@ -25,6 +25,46 @@ export const getAllVideos = async (
         .json({ message: "Videos fetched successfully!", videos: user.videos });
 };
 
+export const getVideo = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Get user id from locals (set up through middleware)
+    const userId = res.locals.data.id;
+    // Get video id from request body
+    const { videoId } = req.body;
+
+    // Check for missing parameters
+    if (!userId || !videoId) {
+        return next(new ExpressError("Missing parameters!", 400));
+    }
+
+    // Fetch user from database
+    const user = await User.findById(userId);
+
+    // Check if user is present or not
+    if (!user) {
+        return next(new ExpressError("User not found!", 404));
+    }
+
+    // Find the video using the videoId
+    const video = user.videos.filter(
+        video => video._id?.toString() === videoId
+    );
+
+    // If the video is present (i.e. the videoId is valid)
+    if (video.length !== 0) {
+        const { processed, url, inferences } = video[0];
+        return res.status(200).json({
+            message: "Video fetched successfully!",
+            video: { processed, url, inferences }
+        });
+    }
+
+    return res.status(422).json({ message: "Incorrect video id!", video: {} });
+};
+
 export const addVideo = async (
     req: Request,
     res: Response,
@@ -84,6 +124,31 @@ export const deleteAllVideos = async (
     await user.updateOne({ $set: { videos: [] } });
 
     return res.status(200).json({ message: "Videos deleted successfully!" });
+};
+
+export const deleteVideo = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Get user id from locals (set up through middleware)
+    const userId = res.locals.data.id;
+    // Get video id from request body
+    const { videoId } = req.body;
+
+    // Check for missing parameters
+    if (!userId || !videoId) {
+        return next(new ExpressError("Missing parameters!", 400));
+    }
+
+    // Fetch user from database and delete the having id as videoId
+    await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { videos: { _id: videoId } } },
+        { runValidators: true }
+    );
+
+    return res.status(200).json({ message: "Video deleted successfully!" });
 };
 
 export const updateVideoDetails = async (
