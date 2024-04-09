@@ -17,3 +17,14 @@
 -   **(POST) /api/videos** - Add new video **(required: auth token, video file)**
 -   **(DELETE) /api/videos** - Delete a video **(required: auth token, video id)**
 -   **(PUT) /api/videos** - Update a video **(required: user id, video id, inference array)**
+
+## Environment variables (in .env file)
+
+```javascript
+MONGO_URL = "Enter MongoDB URL";
+JWT_SECRET = "Enter JWT secret";
+CLOUDINARY_FOLDER = "Enter cloudinary folder name";
+CLOUD_NAME = "Enter cloudinary cloud name";
+API_KEY = "Enter cloudinary API key";
+API_SECRET = "Enter cloudinary API secret";
+```
