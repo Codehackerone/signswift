@@ -2,7 +2,11 @@ import { Request, Response, NextFunction, Express } from "express";
 import User from "../models/users";
 import ExpressError from "../utils/ExpressError";
 import { Multer } from "multer";
-import { uploadVideo } from "../utils/videoUpload";
+import {
+    uploadVideoToCloudinary,
+    deleteVideoFromCloudinary,
+    deleteAllVideosFromCloudinary
+} from "../utils/video";
 import { Inference } from "../models/videos";
 
 export const getAllVideos = async (
@@ -88,12 +92,15 @@ export const addVideo = async (
     }
 
     // Upload the video to Cloudinary
-    const response = await uploadVideo(file.path);
+    const response = await uploadVideoToCloudinary(file.path);
+
     // Get the hosted video URL
     const videoURL = response?.secure_url;
+    // Get the public Id
+    const publicId = response.public_id;
 
     // Add the new video to the current user array
-    user.videos.push({ url: videoURL });
+    user.videos.push({ url: videoURL, publicId });
     // Save the updated user
     await user.save();
 
@@ -120,6 +127,9 @@ export const deleteAllVideos = async (
         return next(new ExpressError("User not found!", 404));
     }
 
+    // Upload all videos from Cloudinary
+    await deleteAllVideosFromCloudinary();
+
     // Update the videos array for the current user
     await user.updateOne({ $set: { videos: [] } });
 
@@ -140,6 +150,25 @@ export const deleteVideo = async (
     if (!userId || !videoId) {
         return next(new ExpressError("Missing parameters!", 400));
     }
+
+    // Fetch user from database
+    const user = await User.findById(userId);
+
+    // Check if user is present or not
+    if (!user) {
+        return next(new ExpressError("User not found!", 404));
+    }
+
+    // Find the public Id of the video that is to be deleted
+    let publicId = "";
+    user.videos.forEach(video => {
+        if (video._id?.toString() === videoId) {
+            publicId = video.publicId;
+        }
+    });
+
+    // Delete the video from cloudinary with the computed public Id
+    await deleteVideoFromCloudinary(publicId);
 
     // Fetch user from database and delete the having id as videoId
     await User.findOneAndUpdate(
