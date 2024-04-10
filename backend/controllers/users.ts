@@ -10,7 +10,7 @@ export const register = async (
     next: NextFunction
 ) => {
     // Retrieve data from request body
-    const { name, email, username, password } = req.body;
+    const { name, email, username, password, phoneNumber } = req.body;
 
     // Check for missing parameters
     if (!email || !username || !password || !name) {
@@ -33,7 +33,8 @@ export const register = async (
         email,
         username,
         password: hashedPassword,
-        name
+        name,
+        phoneNumber
     });
     // Save in database
     await newUser.save();
