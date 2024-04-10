@@ -8,6 +8,7 @@ import {
     deleteAllVideosFromCloudinary
 } from "../utils/video";
 import { Inference } from "../models/videos";
+import { inferenceFormatChecker } from "../utils/typeChecker";
 
 export const getAllVideos = async (
     req: Request,
@@ -68,7 +69,7 @@ export const getVideo = async (
 
     return res.status(403).json({
         message:
-            "Invalid video id / You don't have permission to get details of this video",
+            "Invalid video id / You don't have permission to get details of this video!",
         video: {}
     });
 };
@@ -170,7 +171,7 @@ export const deleteVideo = async (
     if (!publicId) {
         return next(
             new ExpressError(
-                "You don't have permission to delete this video",
+                "Invalid video id / You don't have permission to delete this video!",
                 403
             )
         );
@@ -204,6 +205,9 @@ export const updateVideoDetails = async (
     // Check for missing parameters
     if (!userId || !videoId || !inference) {
         return next(new ExpressError("Missing parameters!", 400));
+    }
+    if (!inferenceFormatChecker(inference)) {
+        return next(new ExpressError("Invalid inference format!", 403));
     }
 
     // Fetch user from database and update the video data having id as videoId
