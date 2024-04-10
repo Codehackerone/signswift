@@ -27,7 +27,12 @@ const User = model<User, UserModelType>(
         videos: [
             new Schema<Video>({
                 url: { type: String, required: true },
-                inferences: [{ timestamp: Date, text: String }],
+                inferences: [
+                    {
+                        timestamp: { type: Date, required: true },
+                        text: { type: String, required: true }
+                    }
+                ],
                 processed: {
                     type: Boolean,
                     default: false
