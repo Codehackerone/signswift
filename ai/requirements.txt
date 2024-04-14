@@ -118,3 +118,5 @@ ultralytics==8.1.47
 urllib3==2.2.1
 Werkzeug==3.0.2
 wrapt==1.16.0
+fastapi==0.110.1
+uvicorn==0.29.0

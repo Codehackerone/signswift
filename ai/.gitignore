@@ -163,3 +163,5 @@ cython_debug/
 !/output/apple
 
 *.h5
+
+logs
