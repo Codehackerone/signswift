@@ -6,7 +6,7 @@ import pandas as pd
 from models.model import Model
 from config import FILE_PATH, PROMPT
 import traceback
-from utils.mistral_api import call_mistral_api
+from utils.mistral_api import MistralAPI
 from typing import Tuple, List, Dict, Union
 import os
 from moviepy.editor import VideoFileClip
@@ -278,6 +278,7 @@ def predict_video(
     Returns:
         Tuple[List[Dict[str, Union[str, float]]], List[str]]: The predictions and the generated sentence.
     """
+    mistral = MistralAPI()
     cap = cv2.VideoCapture(video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)
     frame_width = int(cap.get(3))
@@ -325,7 +326,9 @@ def predict_video(
                             round(get_current_duration(fps, frame_id), 2)
                         ),
                         "sentence_till_now": " ".join(sentence),
-                        "llm_prediction": call_mistral_api(PROMPT(" ".join(sentence))),
+                        "llm_prediction": mistral.call_mistral_api(
+                            PROMPT(" ".join(sentence))
+                        ),
                     }
                 )
             sequence = []

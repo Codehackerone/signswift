@@ -1,4 +1,6 @@
 import json
+import random
+import string
 
 
 def read_json_file(file_path: str) -> dict:
@@ -22,3 +24,16 @@ def read_json_file(file_path: str) -> dict:
         raise FileNotFoundError(f"File not found: {file_path}") from e
     except ValueError as e:
         raise ValueError(f"Invalid JSON data in file: {file_path}") from e
+
+
+def generate_random_string(length: int) -> str:
+    """Generates a random string of the specified length.
+
+    Args:
+        length: The length of the random string to generate.
+
+    Returns:
+        A random string of the specified length.
+    """
+
+    return "".join(random.choices(string.ascii_letters + string.digits, k=length))

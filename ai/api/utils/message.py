@@ -17,6 +17,7 @@ def MessageWrapper(func: Callable[..., Any]) -> Callable[..., Dict[str, Any]]:
         Callable: The wrapped function.
 
     """
+
     def wrapper(*args: Any, **kwargs: Any) -> Dict[str, Any]:
         """
         The wrapper function that handles exceptions and returns the response data.
@@ -30,13 +31,17 @@ def MessageWrapper(func: Callable[..., Any]) -> Callable[..., Dict[str, Any]]:
 
         """
         try:
-            response_data = func(*args, **kwargs)            
-            
-            if not isinstance(response_data, SuccessMessage):                
-                response_data = SuccessMessage(data=response_data)
-        
-        except ApiException as e:    
-            traceback.print_exc()                    
+            response_data = func(*args, **kwargs)
+
+            if isinstance(response_data, SuccessMessage) or isinstance(
+                response_data, ErrorMessage
+            ):
+                response_data = response_data
+            else:
+                raise Exception("Invalid response type.")
+
+        except ApiException as e:
+            # traceback.print_exc()
             response_data = ErrorMessage(e.message, e.status_code, **e.to_dict())
         except Exception as e:
             traceback.print_exc()
@@ -44,5 +49,5 @@ def MessageWrapper(func: Callable[..., Any]) -> Callable[..., Dict[str, Any]]:
         finally:
             response = response_data.to_dict()
             return JSONResponse(content=response, status_code=response_data.status_code)
-        
+
     return wrapper

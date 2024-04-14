@@ -1,6 +1,7 @@
 import logging
 from fastapi import Request
 
+
 class RequestLogger:
     def __init__(self, log_file: str) -> None:
         """
@@ -36,5 +37,7 @@ class RequestLogger:
         if request.method in ["POST", "PUT", "PATCH", "DELETE"]:
             body = await request.body()
 
-        log_message: str = f"Request: {method} {url} | IP: {client_ip} | Query params: {query_params} | Headers: {headers} | Body: {body}"
+        log_message: str = (
+            f"Request: {method} {url} | IP: {client_ip} | Query params: {query_params} | Headers: {headers} | Body: {body}"
+        )
         self.logger.info(log_message)

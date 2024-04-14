@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+
 class ApiException(Exception):
     """
     A custom exception class to handle specific errors in the application.
@@ -9,7 +10,9 @@ class ApiException(Exception):
         code (int): The HTTP status code associated with the error.
     """
 
-    def __init__(self, message: str = "An error occurred.", status_code: int = 500, **kwargs):
+    def __init__(
+        self, message: str = "An error occurred.", status_code: int = 500, **kwargs
+    ):
         """
         Initialize the custom exception with a message and an optional error code.
 
@@ -32,17 +35,23 @@ class ApiException(Exception):
         Returns:
             dict: A dictionary representation of the exception.
         """
-        
+
         result = self.__dict__.copy()
-        
+
         for key, value in result.items():
             if isinstance(value, ApiException):
                 result[key] = value.to_dict()
 
         return result
 
+
 if __name__ == "__main__":
     try:
-        raise ApiException("An error occurred.", 500, details="Additional details.", more_info="https://example.com")
+        raise ApiException(
+            "An error occurred.",
+            500,
+            details="Additional details.",
+            more_info="https://example.com",
+        )
     except ApiException as e:
         print(e.to_dict())

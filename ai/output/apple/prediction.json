@@ -2,35 +2,35 @@
     {
         "word": "dry",
         "probability": "0.021708524",
-        "current_duration": "1.0",
+        "current_duration": "1",
         "sentence_till_now": "dry",
         "llm_prediction": " The ground is dry.\n\nOr, if the sentence is part of a larger context:\nIt is dry here.\n\nOr, with a pronoun:\nThis"
     },
     {
         "word": "apple",
         "probability": "0.93058074",
-        "current_duration": "2.04",
+        "current_duration": "2",
         "sentence_till_now": "dry apple",
         "llm_prediction": " I find the apple dry."
     },
     {
         "word": "green",
         "probability": "0.49446943",
-        "current_duration": "3.07",
+        "current_duration": "3",
         "sentence_till_now": "dry apple green",
         "llm_prediction": " The apple is green and dry."
     },
     {
         "word": "like",
         "probability": "0.7175872",
-        "current_duration": "4.1",
+        "current_duration": "4",
         "sentence_till_now": "dry apple green like",
         "llm_prediction": " The apple looks green and dry."
     },
     {
         "word": "food",
         "probability": "0.5942217",
-        "current_duration": "5.14",
+        "current_duration": "5",
         "sentence_till_now": "dry apple green like food",
         "llm_prediction": " The apple looks dry and green, like it has been sitting out as food."
     }

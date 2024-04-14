@@ -125,6 +125,8 @@ POINT_LANDMARKS = LIP + LHAND + RHAND + NOSE + REYE + LEYE  # +POSE
 NUM_NODES = len(POINT_LANDMARKS)
 CHANNELS = 6 * NUM_NODES
 ROWS_PER_FRAME = 543
+NUMBER_OF_FRAMES = 30
+MIN_THRESHOLD = 0.3
 
 s2p_map = {
     k.lower(): v
@@ -142,6 +144,7 @@ p2s_map = {
 
 def PROMPT(sentence):
     return f"\nYou are given a sentence that are recognized by a sign language interpreter.\nUse pronouns, adverbs to complete the sentence, or rearrange the words and make something that makes sense. \nDo not include any other information in the output and return only one sentence.\n\nSentence: {sentence}\nAnswer:\n"
+
 
 STATUS_CODES = {
     100: "Continue",
