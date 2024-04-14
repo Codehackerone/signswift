@@ -163,3 +163,7 @@ cython_debug/
 !/output/apple
 
 *.h5
+
+logs
+ngrok.log
+/api/dump
