@@ -3,6 +3,8 @@ import User from "../models/users";
 import ExpressError from "../utils/ExpressError";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
+import { isValidId } from "../utils/checker";
+import { IVideo } from "../models/videos";
 
 export const register = async (
     req: Request,
@@ -95,8 +97,16 @@ export const getDetails = async (
 ) => {
     // Get user id from locals (set up through middleware)
     const userId = res.locals.data.id;
+
+    // Check if the user id is valid or not
+    if (!isValidId(userId)) {
+        return next(new ExpressError("Invalid user Id", 403));
+    }
+
     // Fetch user from database
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate<{ videos: IVideo[] }>(
+        "videos"
+    );
 
     // Check if user is present or not
     if (!user) {
@@ -104,7 +114,17 @@ export const getDetails = async (
     }
 
     // Destucture data from user
-    const { name, username, email, phoneNumber, videos } = user;
+    const { name, username, email, phoneNumber } = user;
+
+    // Extract useful properties from video data
+    const videos = user.videos.map(video => {
+        return {
+            url: video.url,
+            processed_data: video.processed_data,
+            processed_video_uri: video.processed_video_uri,
+            status: video.status
+        };
+    });
 
     return res.status(200).json({ name, username, email, videos, phoneNumber });
 };
