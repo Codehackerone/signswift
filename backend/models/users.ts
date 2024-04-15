@@ -1,5 +1,5 @@
 import { Schema, Model, model, Types } from "mongoose";
-import { Video } from "./videos";
+import Video from "./videos";
 
 interface User {
     email: string;
@@ -7,11 +7,11 @@ interface User {
     name: string;
     password: string;
     phoneNumber?: string;
-    videos: Video[];
+    videos: Types.ObjectId[];
 }
 
 type UserDocumentProps = {
-    videos: Types.DocumentArray<Video>;
+    videos: Types.ObjectId[];
 };
 
 type UserModelType = Model<User, {}, UserDocumentProps>;
@@ -24,22 +24,7 @@ const User = model<User, UserModelType>(
         username: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         phoneNumber: { type: String, length: 10, default: "" },
-        videos: [
-            new Schema<Video>({
-                url: { type: String, required: true },
-                inferences: [
-                    {
-                        timestamp: { type: Date, required: true },
-                        text: { type: String, required: true }
-                    }
-                ],
-                processed: {
-                    type: Boolean,
-                    default: false
-                },
-                publicId: { type: String }
-            })
-        ]
+        videos: [{ type: Schema.Types.ObjectId, ref: "Video" }]
     })
 );
 
