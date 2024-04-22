@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+
+.Navbar{
+    font-family: "Play", sans-serif;
+}
+.ant-menu-dark.ant-menu-horizontal >.ant-menu-item-selected, .ant-menu-dark>.ant-menu.ant-menu-horizontal >.ant-menu-item-selected, .ant-menu-dark.ant-menu-horizontal >.ant-menu-submenu-selected, .ant-menu-dark>.ant-menu.ant-menu-horizontal >.ant-menu-submenu-selected{
+    background-color: "white";
+}
