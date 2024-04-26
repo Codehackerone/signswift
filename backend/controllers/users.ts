@@ -3,8 +3,8 @@ import User from "../models/users";
 import ExpressError from "../utils/ExpressError";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
-import { isValidId } from "../utils/checker";
-import { IVideo } from "../models/videos";
+import { isValidId, toMongoId } from "../utils/checker";
+import { UserType } from "../types/user";
 
 export const register = async (
     req: Request,
@@ -103,28 +103,47 @@ export const getDetails = async (
         return next(new ExpressError("Invalid user Id", 403));
     }
 
-    // Fetch user from database
-    const user = await User.findById(userId).populate<{ videos: IVideo[] }>(
-        "videos"
-    );
+    // Get the details of the user using aggregation
+    const user = await User.aggregate<UserType>([
+        { $match: { _id: toMongoId(userId) } },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "videos",
+                foreignField: "_id",
+                as: "videos"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                name: 1,
+                email: 1,
+                username: 1,
+                phoneNumber: 1,
+                videos: {
+                    url: 1,
+                    status: 1,
+                    processed_video_uri: 1,
+                    processed_data: {
+                        word: 1,
+                        probability: 1,
+                        current_duration: 1,
+                        sentence_till_now: 1,
+                        llm_prediction: 1
+                    }
+                }
+            }
+        }
+    ]);
 
     // Check if user is present or not
-    if (!user) {
+    if (user.length === 0) {
         return next(new ExpressError("User not found!", 404));
     }
 
-    // Destucture data from user
-    const { name, username, email, phoneNumber } = user;
-
-    // Extract useful properties from video data
-    const videos = user.videos.map(video => {
-        return {
-            url: video.url,
-            processed_data: video.processed_data,
-            processed_video_uri: video.processed_video_uri,
-            status: video.status
-        };
+    return res.status(200).json({
+        message: "User details fetched successfully!",
+        data: { ...user[0] }
     });
-
-    return res.status(200).json({ name, username, email, videos, phoneNumber });
 };
