@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Express } from "express";
 import User from "../models/users";
-import Video, { IVideo } from "../models/videos";
+import Video from "../models/videos";
 import ExpressError from "../utils/ExpressError";
 import { Multer } from "multer";
 import {
@@ -8,7 +8,8 @@ import {
     deleteVideoFromCloudinary,
     deleteAllVideosFromCloudinary
 } from "../utils/video";
-import { isValidId } from "../utils/checker";
+import { isValidId, toMongoId } from "../utils/checker";
+import { VideoType, VideosType } from "../types/video";
 
 export const getAllVideos = async (
     req: Request,
@@ -28,29 +29,44 @@ export const getAllVideos = async (
         return next(new ExpressError("Invalid user Id", 403));
     }
 
-    // Fetch user from database
-    const user = await User.findById(userId).populate<{ videos: IVideo[] }>(
-        "videos"
-    );
+    // Get the videos of the user using aggregation
+    const user = await User.aggregate<VideosType>([
+        { $match: { _id: toMongoId(userId) } },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "videos",
+                foreignField: "_id",
+                as: "videos"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                videos: {
+                    url: 1,
+                    status: 1,
+                    processed_video_uri: 1,
+                    processed_data: {
+                        word: 1,
+                        probability: 1,
+                        current_duration: 1,
+                        sentence_till_now: 1,
+                        llm_prediction: 1
+                    }
+                }
+            }
+        }
+    ]);
 
     // Check if user is present or not
-    if (!user) {
+    if (user.length === 0) {
         return next(new ExpressError("User not found!", 404));
     }
 
-    // Extract useful properties from video data
-    const videos = user.videos.map(video => {
-        return {
-            url: video.url,
-            processed_data: video.processed_data,
-            processed_video_uri: video.processed_video_uri,
-            status: video.status
-        };
-    });
-
     return res.status(200).json({
         message: "Videos fetched successfully!",
-        videos
+        videos: user[0].videos
     });
 };
 
@@ -78,37 +94,47 @@ export const getVideo = async (
         return next(new ExpressError("Invalid video Id", 403));
     }
 
-    // Fetch the video from database
-    const video = await Video.findById(videoId);
-    // Check if video is present or not
-    if (!video) {
-        return res.status(404).json({ message: "Video not found!" });
-    }
+    // Get the video of the user using aggregation
+    const user = await User.aggregate<VideoType>([
+        { $match: { _id: toMongoId(userId) } },
+        { $unwind: "$videos" },
+        { $match: { videos: toMongoId(videoId) } },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "videos",
+                foreignField: "_id",
+                as: "video"
+            }
+        },
+        { $unwind: "$video" },
+        {
+            $project: {
+                _id: 0,
+                video: {
+                    url: 1,
+                    status: 1,
+                    processed_video_uri: 1,
+                    processed_data: {
+                        word: 1,
+                        probability: 1,
+                        current_duration: 1,
+                        sentence_till_now: 1,
+                        llm_prediction: 1
+                    }
+                }
+            }
+        }
+    ]);
 
-    // Fetch user from database
-    const user = await User.findById(userId);
-    // Check if user is present or not
-    if (!user) {
-        return next(new ExpressError("User not found!", 404));
-    }
-
-    const isAuthorized = user.videos.includes(videoId);
-
-    // Check if the video belongs to the requesting user or not
-    if (!isAuthorized) {
-        return res.status(401).json({
-            message: "You don't have permission to get details of this video!"
-        });
+    // Check if user is present or not and whether he is authorized to get details of the video
+    if (user.length === 0) {
+        return next(new ExpressError("User not found / Access denied!", 404));
     }
 
     return res.status(200).json({
         message: "Video fetched successfully!",
-        video: {
-            url: video.url,
-            processed_data: video.processed_data,
-            processed_video_uri: video.processed_video_uri,
-            status: video.status
-        }
+        video: user[0].video
     });
 };
 
