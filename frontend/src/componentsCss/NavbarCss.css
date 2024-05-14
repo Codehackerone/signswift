@@ -6,3 +6,6 @@
 .ant-menu-dark.ant-menu-horizontal >.ant-menu-item-selected, .ant-menu-dark>.ant-menu.ant-menu-horizontal >.ant-menu-item-selected, .ant-menu-dark.ant-menu-horizontal >.ant-menu-submenu-selected, .ant-menu-dark>.ant-menu.ant-menu-horizontal >.ant-menu-submenu-selected{
     background-color: "white";
 }
+.logOut{
+    cursor: pointer;
+}

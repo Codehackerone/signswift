@@ -1,8 +1,7 @@
 import { Button } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player/file";
 import { ShrinkOutlined, ArrowsAltOutlined } from "@ant-design/icons";
-
 
 const ShrinkExpandButton = (shrinked: boolean) => {
   if (shrinked) {
@@ -13,6 +12,7 @@ const ShrinkExpandButton = (shrinked: boolean) => {
 };
 
 export default function LiveTranslation() {
+  const [loading, setLoading] = useState(false);
   const [shrinked, setShrinked] = useState<boolean>(false);
   const [userVideo, setUserVideo] = useState<MediaStream | undefined>(
     undefined
@@ -38,32 +38,53 @@ export default function LiveTranslation() {
   const getUserWebcam = useCallback(async () => {
     try {
       const video = await navigator.mediaDevices.getUserMedia({ video: true });
-      // console.log(video);
+      console.log(video);
       setUserVideo(video);
     } catch (error) {
       console.log(error);
     }
   }, []);
-  useEffect(() => {
-    getUserWebcam();
-  }, []);
+  const handleVideoCapture = async () => {
+    document.getElementsByClassName("VideoCaptureStart")[0].textContent =
+      "Loading ...";
+    await getUserWebcam();
+    setTimeout(()=>{
+      setLoading(true);
+    },1200);
+  };
+  const handleClose = async ()=>{
+    userVideo?.getTracks().forEach((track)=>{
+      track.stop();
+    });
+    console.log(userVideo);
+    setLoading(false);
+  }
   return (
     <div className="LiveTranslatorContainer">
-      <div className="videoFeed d-flex justify-content-center align-items-center" style={videoFeedStyle}>
-        <ReactPlayer
-          url={userVideo}
-          width={"100%"}
-          height={"100%"}
-          style={{ borderRadius: "10px" }}
-          playing={true}
-        ></ReactPlayer>
+      <div
+        className="videoFeed d-flex justify-content-center align-items-center"
+        style={videoFeedStyle}
+      >
+        {!loading && (
+          <button className="VideoCaptureStart" onClick={handleVideoCapture}>
+            Start Capturing
+          </button>
+        )}
+        {loading && (
+          <ReactPlayer
+            url={userVideo}
+            width={"100%"}
+            height={"100%"}
+            style={{ borderRadius: "10px" }}
+            playing={true}
+          ></ReactPlayer>
+        )}
         <Button className="ShrinkExpandButton" onClick={handleShrinkExpand}>
           {ShrinkExpandButton(shrinked)}
         </Button>
+        {loading && <button className="VideoCaptureClose" onClick={handleClose}>Close</button>}
       </div>
-      <div className="languageFeed">
-        
-      </div>
+      <div className="languageFeed"></div>
     </div>
   );
 }

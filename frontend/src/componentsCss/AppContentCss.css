@@ -96,7 +96,7 @@
   /* overflow: clip;
   overflow-clip-margin: 30%; */
 }
-.LiveTranslatorContainer{
+.LiveTranslatorContainer {
   box-sizing: border-box;
   display: flex;
   height: 100%;
@@ -125,4 +125,45 @@
   right: 30px;
   bottom: 150px;
   border-radius: 200px;
+}
+.VideoCaptureStart {
+  background: white;
+  width: 9em;
+  height: 2em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  box-shadow: inset 0px 0px 10px 0px rgb(9, 9, 9);
+  border-radius: 10px;
+  font-family: "Play";
+  cursor: pointer;
+  border: 0px;
+}
+.VideoCaptureStart:active {
+  transform: scale(0.95);
+  box-shadow: inset 0px 0px 20px 0px rgb(9, 9, 9);
+}
+.VideoCaptureClose{
+  position: absolute;
+  right: 1.9%;
+  top: 8%;
+  background: white;
+  width: 3.2em;
+  height: 2em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  box-shadow: inset 0px 0px 10px 0px rgb(9, 9, 9);
+  border-radius: 10px;
+  font-family: "Play";
+  cursor: pointer;
+  border: 0px;
+}
+.VideoCaptureClose:active{
+  transform: scale(0.95);
+  box-shadow: inset 0px 0px 20px 0px rgb(9, 9, 9);
 }

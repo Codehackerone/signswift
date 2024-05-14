@@ -1,5 +1,4 @@
 import React from "react";
-// import { useEffect, useState } from "react";
 import Login from "../ImageResources/login.png"
 
 interface Props{
@@ -16,7 +15,6 @@ export default function TeamMember(props:Props) {
       <div className="circlePhoto d-flex align-items-center justify-content-center">
         <img
           className="innerPhoto"
-          // src="https://avatars.githubusercontent.com/u/136729670?v=4"
           src={Login}
           alt=""
         />

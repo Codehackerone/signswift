@@ -1,10 +1,11 @@
 import { Menu, MenuProps } from "antd";
 import { Header } from "antd/es/layout/layout";
-import React from "react";
+import React, { useContext } from "react";
 import LoginImg from "../ImageResources/login.png";
 import { Link, useNavigate } from "react-router-dom";
 import "../componentsCss/NavbarCss.css";
-import { ConfigProvider } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
+import { loginContext } from "../contexts/LoginProvider";
 
 const items: MenuProps["items"] = [
   {
@@ -22,6 +23,12 @@ const items: MenuProps["items"] = [
 ];
 export default function Navbar() {
   const navigate = useNavigate();
+  const loggedin = useContext(loginContext);
+  const handleLogOut = () => {
+    localStorage.removeItem("currentuser");
+    navigate("/logIn");
+    loggedin.setloggedin(false);
+  };
   return (
     <div
       className="Navbar"
@@ -51,36 +58,64 @@ export default function Navbar() {
             </span>
           </Link>
         </div>
-        {/* <ConfigProvider theme={{
-          components:{
-            Menu:{
-              colorSuccess : "white"
-            }
-          }
-        }}> */}
         <Menu
           theme="dark"
           mode="horizontal"
-          // defaultSelectedKeys={["2"]}
           items={items}
           style={{ flex: 1, minWidth: 0 }}
           onClick={({ key }) => {
-            navigate(key);
+            if (key === "/" && localStorage.getItem("currentuser") !== null) {
+              navigate("/user/LiveTranslation");
+            } else {
+              navigate(key);
+            }
           }}
         />
-        {/* </ConfigProvider> */}
+
         <div className="login" style={{ color: "white" }}>
-          <img
-            src={LoginImg}
-            alt=""
-            style={{
-              width: "30px",
-              height: "30px",
-              marginRight: "10px",
-              filter: "invert(100%)",
-            }}
-          />
-          <Link to={"/login"} style={{textDecoration:"none", color:"white"}}>Login</Link>
+          {localStorage.getItem("currentuser") === null ? (
+            <img
+              src={LoginImg}
+              alt=""
+              style={{
+                width: "30px",
+                height: "30px",
+                marginRight: "10px",
+                filter: "invert(100%)",
+              }}
+            />
+          ) : (
+            <span
+              className="logOut"
+              style={{
+                width: "30px",
+                height: "30px",
+                marginRight: "7px",
+              }}
+            >
+              <LogoutOutlined />
+            </span>
+          )}
+          {localStorage.getItem("currentuser") === null ? (
+            <Link
+              to={"/login"}
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              Login
+            </Link>
+          ) : (
+            <span
+              id="logout"
+              style={{
+                cursor: "pointer",
+                textDecoration: "none",
+                color: "white",
+              }}
+              onClick={handleLogOut}
+            >
+              LogOut
+            </span>
+          )}
         </div>
       </Header>
     </div>

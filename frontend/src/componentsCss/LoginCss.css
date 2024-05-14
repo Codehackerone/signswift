@@ -7,14 +7,14 @@
 }
 .innerLogin {
   width: 70%;
-  row-gap: 7vh;
+  row-gap: 5vh;
 }
 .middleLogin {
   width: 50%;
-  row-gap: 5vh;
+  row-gap: 3vh;
   min-height: 75%;
   position: relative;
-  padding-bottom: 13vh;
+  padding-bottom: 12vh;
   background: linear-gradient(to bottom, #042b50, #001529);
   color: white;
   border-radius: 10px;
@@ -30,7 +30,7 @@
   border-radius: 10px;
   box-shadow: 0px 0px 5px 5px #efe7da;
   column-gap: 2vh;
-  height: 8vh;
+  height: 5vh;
 }
 .inputfield img {
   /* filter: invert(100%); */
@@ -52,7 +52,7 @@ input {
 }
 .forgotpassword {
   position: absolute;
-  top: 115%;
+  top: 140%;
   left: 25%;
   font-family: "Play", sans-serif;
 }
@@ -77,7 +77,7 @@ input {
 }
 .transitionLoginToSignUp{
     width: 15%;
-    margin-top: 2vh;
+    margin-top: 1vh;
 }
 .transitionButton {
   width: 15vh;

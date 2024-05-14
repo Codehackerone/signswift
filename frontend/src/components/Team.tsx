@@ -4,8 +4,6 @@ import TeamMember from "./TeamMembers";
 
 const Signswift = () => {return (<span style={{fontFamily:"Dancing Script"}}>SignSwift</span>)}
 export default function Team() {
-  // const signswift = <span style={{fontFamily:"Dancing Script"}}>SignSwift</span>
-  
   return (
     <div className="outerTeam d-flex flex-column align-items-center" style={{whiteSpace:"wrap"}}>
       <div className="innerTeam d-flex flex-column justify-content-between">

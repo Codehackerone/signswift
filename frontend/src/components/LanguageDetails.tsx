@@ -5,7 +5,6 @@ export default function LanguageDetails() {
   return (
     <div>
       <div className="LanguageHeadingTop d-flex flex-column align-items-center justify-content-center">
-      {/* <div className="LanguageHeading" > */}
         <div className="languageHeading">
           <span>Let Your Hands Speak Multiple Languge</span>
         </div>

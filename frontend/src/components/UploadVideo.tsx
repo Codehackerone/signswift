@@ -1,10 +1,4 @@
-import React, {
-  MouseEventHandler,
-  ReactEventHandler,
-  useEffect,
-  useState,
-} from "react";
-import { unmountComponentAtNode, render } from "react-dom";
+import React, { useState } from "react";
 import "../componentsCss/UploadVideoCss.css";
 import axios from "axios";
 import ReactPlayer from "react-player";
@@ -19,25 +13,20 @@ export default function UploadVideo() {
   const [mouseOver, setMouseOver] = useState<boolean>(false);
 
   const handleUpload = async (e: React.MouseEvent<HTMLElement>) => {
-    // document
-    //   .getElementsByClassName("UploadVideoButtonContainer")[0]
-    //   .classList.add("SlidingAnimation");
-    // document
-    //   .getElementsByClassName("AfterUploadButton")[0]
-    //   .classList.toggle("Display-None");
     const formData = new FormData();
     formData.append("file", file);
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://127.0.0.1:3001/api/videos",
+        "http://127.0.0.1:8080/api/videos",
         formData,
         {
           headers: {
-            "x-access-token": "",
+            "x-access-token": localStorage.getItem("currentuser"),
           },
         }
       );
+      console.log(response.data);
       setVideoURL(response.data.url);
       setIsLoading(false);
       setUploaded(true);
@@ -62,17 +51,16 @@ export default function UploadVideo() {
         .getElementById("AfterUploadSubmitButton")
         ?.classList.remove("AfterUploadSubmitButtonAnimation");
     }, 1000);
-    // setUploaded(true);
     const formData = new FormData();
     formData.append("file", file);
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://127.0.0.1:3001/api/videos",
+        "http://127.0.0.1:8080/api/videos",
         formData,
         {
           headers: {
-            "x-access-token": "",
+            "x-access-token": localStorage.getItem("currentuser"),
           },
         }
       );
@@ -88,38 +76,33 @@ export default function UploadVideo() {
       setIsLoading(false);
     }
   };
-  // useEffect(() => {
-  //   console.log("hello");
-  // }, [videoURL]);
   return (
     <div className="UploadVideoContainer">
       <div className="UploadedVideoInnerContainer">
         <div className="UploadVideoButtonContainer" style={fileUploadStyle}>
-          <form className="FileUpload">
-            <div className="FileInput">
-              <input
-                id="FileUpload"
-                type="file"
-                accept="video/*"
-                onChange={async (e) => {
-                  setFile(e.target.files ? e.target.files[0] : "");
-                }}
+          <div className="FileInput">
+            <input
+              id="FileUpload"
+              type="file"
+              accept="video/*"
+              onChange={async (e) => {
+                setFile(e.target.files ? e.target.files[0] : "");
+              }}
+            />
+            <label htmlFor="FileUpload" className="FileUploadLabel">
+              <UploadOutlined
+                style={{ fontSize: "1em", marginRight: "10px" }}
               />
-              <label htmlFor="FileUpload" className="FileUploadLabel">
-                <UploadOutlined
-                  style={{ fontSize: "1em", marginRight: "10px" }}
-                />
-                <span className="FileUploadText">Upload File</span>
-              </label>
-            </div>
-            <button
-              className="UploadSubmitButton"
-              onClick={handleUpload}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Submit"}
-            </button>
-          </form>
+              <span className="FileUploadText">Upload File</span>
+            </label>
+          </div>
+          <button
+            className="UploadSubmitButton"
+            onClick={handleUpload}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Submit"}
+          </button>
         </div>
         {uploaded && (
           <ReactPlayer
@@ -152,6 +135,7 @@ export default function UploadVideo() {
             className="AfterUploadButtonLabelContainer"
             htmlFor="FileUpload"
             onClick={() => {
+              console.log(loading);
               document
                 .getElementById("AfterUploadSubmitButton")
                 ?.classList.add("AfterUploadSubmitButtonAnimation");

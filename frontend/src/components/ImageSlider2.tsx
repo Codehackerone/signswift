@@ -13,7 +13,7 @@ import Arrow from "../ImageResources/arrow.png";
 
 export default function ImageSlider2() {
   return (
-    <div style={{backgroundColor:"#e4f2ff" }}>
+    <div style={{ backgroundColor: "#e4f2ff" }}>
       <div className="ImageSlider2 container d-flex flex-column justify-content-center align-items-center">
         <div className="ImgSlide2ExtraInfo d-flex flex-column align-items-start justify-content-between">
           <div className="Extraheading">Learn Hand Sign Effortlessly</div>
@@ -30,7 +30,10 @@ export default function ImageSlider2() {
             className="hellohowareyou row"
             style={{ width: "100%", position: "relative", top: "-80%" }}
           >
-            <div className="Hello col text-center" style={{position:"relative"}}>
+            <div
+              className="Hello col text-center"
+              style={{ position: "relative" }}
+            >
               <div className="d-flex flex-column justify-content-center align-items-center">
                 <span>Hello</span>
                 <img
@@ -96,9 +99,13 @@ export default function ImageSlider2() {
             </div>
           </div>
           <div
-            // className="handsignimg d-flex justify-content-between align-items-center"
             className="handsignimg row"
-            style={{ width: "100%", position: "relative", top: "-25%", height:"11vh" }}
+            style={{
+              width: "100%",
+              position: "relative",
+              top: "-25%",
+              height: "11vh",
+            }}
           >
             <div
               className="hello col"

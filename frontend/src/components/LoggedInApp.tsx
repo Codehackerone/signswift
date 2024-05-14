@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import type { GetProps } from "antd";
 import Icon from "@ant-design/icons";
 import {
@@ -7,12 +7,12 @@ import {
   BarsOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Button, Menu } from "antd";
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { Menu } from "antd";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import LiveTranslation from "./LiveTranslation";
-import Login from "./Login";
 import UploadVideo from "./UploadVideo";
 import History from "./History";
+import { loginContext } from "../contexts/LoginProvider";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -66,7 +66,6 @@ const LanguageIcon = (props: Partial<CustomIconComponentProps>) => (
 
 const English = () => (
   <svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    {/* <path fill="currentColor" d="M0 0h24v24H0z"/> */}
     <path fill="currentColor" d="M14 10h2v.757a4.5 4.5 0 0 1 7 3.743V20h-2v-5.5c0-1.43-1.175-2.5-2.5-2.5S16 13.07 16 14.5V20h-2V10zm-2-6v2H4v5h8v2H4v5h8v2H2V4h10z"/>
 </svg>
 );
@@ -88,7 +87,7 @@ export default function LoggedInApp() {
   const [collapsedButton, setCollapsedButton] = useState(`CollapsedButton`);
   const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
-
+  const loggedin = useContext(loginContext);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
     if (collapsedButton === `CollapsedButton`) {
@@ -97,14 +96,17 @@ export default function LoggedInApp() {
       setCollapsedButton(`CollapsedButton`);
     }
   };
+  useEffect(()=>{
+    if (!loggedin.loggedin) {
+      navigate("/logIn");
+    }
+  },[]);
   return (
     <div className="loggedInAppContainer">
       <div className="MiniMenu">
-        {/* <div className="ExpaningButton"> */}
         <div onClick={toggleCollapsed} className={`${collapsedButton}`}>
           <BarsOutlined style={{ color: "white" }} />
         </div>
-        {/* </div> */}
         <Menu
           mode="inline"
           theme="dark"
@@ -118,7 +120,6 @@ export default function LoggedInApp() {
         />
       </div>
       <div className="loggedinAppService">
-        {/* <Outlet></Outlet> */}
         <Routes>
           <Route
             path="LiveTranslation"
