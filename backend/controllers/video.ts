@@ -78,11 +78,20 @@ export const getVideo = async (
     // Get user id from locals (set up through middleware)
     const userId = res.locals.data.id;
     // Get video id from request body
-    const { videoId } = req.body;
+    const { videoId } = req.query;
 
     // Check for missing parameters
     if (!userId || !videoId) {
         return next(new ExpressError("Missing parameters!", 400));
+    }
+
+    if (typeof videoId !== "string") {
+        return next(
+            new ExpressError(
+                "Query param 'videoId' has to be of type string",
+                422
+            )
+        );
     }
 
     // Check if the user id is valid or not
