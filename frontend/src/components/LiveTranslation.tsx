@@ -38,7 +38,6 @@ export default function LiveTranslation() {
   const getUserWebcam = useCallback(async () => {
     try {
       const video = await navigator.mediaDevices.getUserMedia({ video: true });
-      console.log(video);
       setUserVideo(video);
     } catch (error) {
       console.log(error);
@@ -56,7 +55,6 @@ export default function LiveTranslation() {
     userVideo?.getTracks().forEach((track)=>{
       track.stop();
     });
-    console.log(userVideo);
     setLoading(false);
   }
   return (

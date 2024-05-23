@@ -62,7 +62,7 @@ export default function Login() {
           "http://127.0.0.1:8080/api/user/register",
           signUpLogInForm
         );
-        console.log(signInUser.data);
+        // console.log(signInUser.data);
         setLoginSign("Login");
         setIsModalOpen(true);
       } else {
@@ -70,13 +70,12 @@ export default function Login() {
           "http://127.0.0.1:8080/api/user/login",
           signUpLogInForm
         );
-        console.log(logInUser);
+        // console.log(logInUser);
         localStorage.setItem("currentuser",logInUser.data.auth);
         loggedin.setloggedin(true);
         navigate("/user/LiveTranslation");
       }
     } catch (error) {
-      console.log("Can't Log In!! Please put proper credentials");
       console.log(error);
     }
   };

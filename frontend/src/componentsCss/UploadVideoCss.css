@@ -240,3 +240,31 @@
 .FileUpload:active {
   cursor: pointer;
 } */
+.StartProcessing{
+  position: absolute;
+  /* width: 100px; */
+  top: 2%;
+  right: 1%;
+  z-index: 9;
+  border: 0px;
+  background-color: white;
+  box-shadow: inset 0px 0px 10px 0px rgb(0, 0, 0);
+  border-radius: 10px;
+  text-align: center;
+  font-family: "Play";
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+}
+.StartProcessing:active{
+  scale: 0.95;
+  box-shadow: inset 0px 0px 15px 0px rgb(0, 0, 0);
+}
+.VideoResult{
+  font-family: "Play";
+}
+.VideoFinalSentence{
+  font-size: 2rem;
+}

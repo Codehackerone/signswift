@@ -72,7 +72,10 @@
 }
 .HistoryTranslation {
   width: 100%;
-  background-color: blue;
+  /* background-color: blue; */
+  color: white;
+  font-family: "Play";
+  font-size: 1.3rem;
   padding: 15px;
 }
 .copyToClipBoard{
