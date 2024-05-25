@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
+.ImageSlider {
+  position: relative;
+  height: 82vh;
+  width: 100%;
+  background-color: #fbf4f4;
+  box-shadow: #fbf4f4 0px 1px 5px 5px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 160%;
+  z-index: 99;
+}
+
+.loginButtonContainer {
+  position: absolute;
+  z-index: 999;
+  top: 90%;
+  left: 45%;
+  width: 10vw;
+}
+.loginButton {
+  width: 10vw;
+  background-color: #001529;
+  border: 0px;
+  color: white;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1rem;
+}
