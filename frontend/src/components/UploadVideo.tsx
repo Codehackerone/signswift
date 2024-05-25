@@ -5,6 +5,7 @@ import ReactPlayer from "react-player";
 import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 export default function UploadVideo() {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
   const [file, setFile] = useState<File | string>("");
   const [videoURL, setVideoURL] = useState<string | undefined>(undefined);
   const [processedVideoId, setProcessedVideoId] = useState<string>("");
@@ -25,7 +26,7 @@ export default function UploadVideo() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://127.0.0.1:8080/api/videos",
+        apiUrl + "/api/videos",
         formData,
         {
           headers: {
@@ -68,7 +69,7 @@ export default function UploadVideo() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://127.0.0.1:8080/api/videos",
+        apiUrl + "/api/videos",
         formData,
         {
           headers: {
@@ -93,7 +94,7 @@ export default function UploadVideo() {
   const handleProcessing = async () => {
     setProcessing(true);
     try {
-      const response = await axios.get("http://127.0.0.1:8080/api/videos", {
+      const response = await axios.get(apiUrl + "/api/videos", {
         headers: {
           "x-access-token": localStorage.getItem("currentuser"),
         },

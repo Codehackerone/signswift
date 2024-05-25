@@ -20,6 +20,7 @@ interface signUpFormDatatype {
 }
 
 export default function Login() {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
   const loggedin = useContext(loginContext);
   const [loginsign, setLoginSign] = useState("Sign Up");
@@ -59,7 +60,7 @@ export default function Login() {
     try {
       if (loginsign === "Sign Up") {
         const signInUser = await axios.post(
-          "http://127.0.0.1:8080/api/user/register",
+          apiUrl + "/api/user/register",
           signUpLogInForm
         );
         // console.log(signInUser.data);
@@ -67,7 +68,7 @@ export default function Login() {
         setIsModalOpen(true);
       } else {
         const logInUser = await axios.post(
-          "http://127.0.0.1:8080/api/user/login",
+          apiUrl + "/api/user/login",
           signUpLogInForm
         );
         // console.log(logInUser);

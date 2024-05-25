@@ -12,6 +12,7 @@ interface currentHistoryType {
   ProcessedData: any[];
 }
 export default function History() {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
   const [userVideoUrls, setUserVideoUrls] = useState<any[]>([]);
   const [currentHistory, setCurrentHistory] = useState<currentHistoryType>({
     Heading: "",
@@ -22,7 +23,7 @@ export default function History() {
   const fetchUserDetails = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8080/api/user/details",
+        apiUrl + "/api/user/details",
         {
           headers: {
             "x-access-token": localStorage.getItem("currentuser"),
@@ -59,7 +60,7 @@ export default function History() {
     <div className="History">
       <div className="HistoryCards">
         {userVideoUrls.map((video) => {
-          if (video.processed_video_uri !== "") {
+          // if (video.processed_video_uri !== "") {
             return (
               <Card
                 hoverable
@@ -87,7 +88,7 @@ export default function History() {
                 </p>
               </Card>
             );
-          }
+          // }
         })}
       </div>
       <div className="HistoryCardDetails">
