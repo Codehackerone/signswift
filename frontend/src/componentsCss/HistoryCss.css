@@ -66,8 +66,10 @@
   width: 100%;
   height: 60%;
   min-height: 60%;
+  border: 2px solid white;
+  border-radius: 10px;
 }
-.HistoryVideoInnerContainer video{
+.HistoryVideoInnerContainer video {
   border-radius: 10px;
 }
 .HistoryTranslation {
@@ -76,13 +78,37 @@
   color: white;
   font-family: "Play";
   font-size: 1.3rem;
-  padding: 15px;
+  padding: 15px 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 2%;
 }
-.copyToClipBoard{
+.WordTillNow {
+  width: 50%;
+  height: 170px;
+  display: flex;
+  justify-content: start;
+  /* border: 2px solid black; */
+  box-shadow: inset 0px 0px 5px 0px grey;
+  border-radius: 10px;
+  padding: 5px;
+}
+.FullSentence {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  box-shadow: inset 0px 0px 5px 0px grey;
+  border-radius: 10px;
+  padding: 5px;
+}
+.copyToClipBoard {
   position: relative;
   cursor: pointer;
 }
-#AfterCopyToClipBoard{
+#AfterCopyToClipBoard {
   display: none;
   /* content: "Copied To Clip Board"; */
   text-align: center;

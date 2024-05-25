@@ -18,7 +18,8 @@ export default function History() {
     Url: "",
     ProcessedData: [],
   });
-  const [TranslatedHistory, setTranslatedHistory] = useState<string>("");
+  const [TranslatedHistorySentence, setTranslatedHistorySentence] = useState<string>("");
+  const [TranslatedHistoryLLm, setTranslatedHistoryLLm] = useState<string>("");
   const fetchUserDetails = async () => {
     try {
       const response = await axios.get(
@@ -40,17 +41,26 @@ export default function History() {
   useEffect(() => {
     let i = 0;
     try {
-      const interval = setInterval(() => {
-        setTranslatedHistory(currentHistory.ProcessedData[i].sentence_till_now);
-        setTimeout(() => {
-          setTranslatedHistory(
-            currentHistory.ProcessedData[i++].llm_prediction
-          );
-        }, 500);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(interval);
-      }, currentHistory.ProcessedData.length * 1000);
+      // const interval = setInterval(() => {
+      //   setTranslatedHistory(currentHistory.ProcessedData[i].sentence_till_now);
+      //   setTimeout(() => {
+      //     setTranslatedHistory(
+      //       currentHistory.ProcessedData[i++].llm_prediction
+      //     );
+      //   }, 500);
+      // }, 1000);
+
+      (async ()=>{
+        currentHistory.ProcessedData.forEach(async (word)=>{
+          setTimeout(()=>{
+            setTranslatedHistorySentence(word.sentence_till_now);
+            setTranslatedHistoryLLm(word.llm_prediction);
+          },word.current_duration*1000);
+        });
+      })();
+      // setTimeout(() => {
+      //   clearInterval(interval);
+      // }, currentHistory.ProcessedData.length * 1000);
     } catch (error) {
       console.log(error);
     }
@@ -130,9 +140,9 @@ export default function History() {
               ></ReactPlayer>
             </div>
             <div className="HistoryTranslation">
-              <div className="WordTillNow"></div>
+              <div className="WordTillNow">Analysing Video :- {TranslatedHistorySentence}</div>
               <div className="FullSentence">
-                Final Text :- {TranslatedHistory}
+                Final Text :- {TranslatedHistoryLLm}
               </div>
             </div>
           </div>
