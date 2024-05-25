@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 import userRoutes from "./routes/user";
 import videoRoutes from "./routes/video";
+import textRoutes from "./routes/text";
 import ExpressError from "./utils/ExpressError";
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(express.json());
 
 app.use("/api/user", userRoutes);
 app.use("/api/videos", videoRoutes);
+app.use("/api/text", textRoutes);
 
 app.use(
     (err: ExpressError, req: Request, res: Response, next: NextFunction) => {
@@ -35,7 +37,6 @@ app.use(
     }
 );
 
-const PORT = 8080;
-app.listen(PORT, () => {
-    console.log(`Connected to PORT ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Connected to PORT ${process.env.PORT}`);
 });
