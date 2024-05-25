@@ -10,6 +10,7 @@ import ExpressError from "./utils/ExpressError";
 dotenv.config();
 
 const dbURL = process.env.MONGO_URL!;
+const PORT = process.env.PORT || 9876;
 mongoose
     .connect(dbURL)
     .then(() => console.log("Connected to DB successfully!"))
@@ -35,7 +36,7 @@ app.use(
     }
 );
 
-const PORT = 8080;
+
 app.listen(PORT, () => {
     console.log(`Connected to PORT ${PORT}`);
 });
