@@ -18,7 +18,8 @@ export default function History() {
     Url: "",
     ProcessedData: [],
   });
-  const [TranslatedHistorySentence, setTranslatedHistorySentence] = useState<string>("");
+  const [TranslatedHistorySentence, setTranslatedHistorySentence] =
+    useState<string>("");
   const [TranslatedHistoryLLm, setTranslatedHistoryLLm] = useState<string>("");
   const fetchUserDetails = async () => {
     try {
@@ -39,31 +40,20 @@ export default function History() {
     fetchUserDetails();
   }, []);
   useEffect(() => {
-    let i = 0;
     try {
-      // const interval = setInterval(() => {
-      //   setTranslatedHistory(currentHistory.ProcessedData[i].sentence_till_now);
-      //   setTimeout(() => {
-      //     setTranslatedHistory(
-      //       currentHistory.ProcessedData[i++].llm_prediction
-      //     );
-      //   }, 500);
-      // }, 1000);
-
-      (async ()=>{
-        currentHistory.ProcessedData.forEach(async (word)=>{
-          setTimeout(()=>{
+      (async () => {
+        currentHistory.ProcessedData.forEach(async (word) => {
+          setTimeout(() => {
             setTranslatedHistorySentence(word.sentence_till_now);
             setTranslatedHistoryLLm(word.llm_prediction);
-          },word.current_duration*1000);
+          }, word.current_duration * 1000);
         });
       })();
-      // setTimeout(() => {
-      //   clearInterval(interval);
-      // }, currentHistory.ProcessedData.length * 1000);
     } catch (error) {
       console.log(error);
     }
+    const video = document.querySelector(".HistoryVideoInnerContainer video");
+    console.log(video);
   }, [currentHistory]);
   return (
     <div className="History">
@@ -137,10 +127,22 @@ export default function History() {
                 style={{ borderRadius: "10px" }}
                 controls={true}
                 playing={true}
+                onPlay={() => {
+                  (async () => {
+                    currentHistory.ProcessedData.forEach(async (word) => {
+                      setTimeout(() => {
+                        setTranslatedHistorySentence(word.sentence_till_now);
+                        setTranslatedHistoryLLm(word.llm_prediction);
+                      }, word.current_duration * 1000);
+                    });
+                  })();
+                }}
               ></ReactPlayer>
             </div>
             <div className="HistoryTranslation">
-              <div className="WordTillNow">Analysing Video :- {TranslatedHistorySentence}</div>
+              <div className="WordTillNow">
+                Analysing Video :- {TranslatedHistorySentence}
+              </div>
               <div className="FullSentence">
                 Final Text :- {TranslatedHistoryLLm}
               </div>
