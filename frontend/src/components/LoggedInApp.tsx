@@ -21,7 +21,7 @@ function getItem(
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: "group"
+  type?: "group",
 ): MenuItem {
   return {
     key,
@@ -65,13 +65,19 @@ const LanguageIcon = (props: Partial<CustomIconComponentProps>) => (
 );
 
 const English = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentColor" d="M14 10h2v.757a4.5 4.5 0 0 1 7 3.743V20h-2v-5.5c0-1.43-1.175-2.5-2.5-2.5S16 13.07 16 14.5V20h-2V10zm-2-6v2H4v5h8v2H4v5h8v2H2V4h10z"/>
-</svg>
+  <svg
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill="currentColor"
+      d="M14 10h2v.757a4.5 4.5 0 0 1 7 3.743V20h-2v-5.5c0-1.43-1.175-2.5-2.5-2.5S16 13.07 16 14.5V20h-2V10zm-2-6v2H4v5h8v2H4v5h8v2H2V4h10z"
+    />
+  </svg>
 );
-const EnglishIcon = ()=>(
-  <Icon component={English}></Icon>
-);
+const EnglishIcon = () => <Icon component={English}></Icon>;
 
 const items: MenuItem[] = [
   getItem("Live Translation", "LiveTranslation", <SpeechIcon />),
@@ -96,11 +102,11 @@ export default function LoggedInApp() {
       setCollapsedButton(`CollapsedButton`);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (!loggedin.loggedin) {
       navigate("/logIn");
     }
-  },[]);
+  }, []);
   return (
     <div className="loggedInAppContainer">
       <div className="MiniMenu">
@@ -114,7 +120,6 @@ export default function LoggedInApp() {
           items={items}
           style={{ borderRadius: 10 }}
           onClick={({ key }) => {
-
             if (!key.startsWith("NoNavigate")) navigate(key);
           }}
         />
@@ -125,7 +130,10 @@ export default function LoggedInApp() {
             path="LiveTranslation"
             element={<LiveTranslation></LiveTranslation>}
           ></Route>
-          <Route path="UploadVideo" element={<UploadVideo></UploadVideo>}></Route>
+          <Route
+            path="UploadVideo"
+            element={<UploadVideo></UploadVideo>}
+          ></Route>
           <Route path="History" element={<History></History>}></Route>
         </Routes>
       </div>

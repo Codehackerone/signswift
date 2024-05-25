@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../componentsCss/HistoryCss.css";
 import { Card } from "antd";
 import axios from "axios";
@@ -19,17 +19,18 @@ export default function History() {
     Url: "",
     ProcessedData: [],
   });
-  const [TranslatedHistory, setTranslatedHistory] = useState<string>("");
+  const [TranslatedHistorySentence, setTranslatedHistorySentence] =
+    useState<string>("");
+  const [TranslatedHistoryLLm, setTranslatedHistoryLLm] = useState<string>("");
+  const playerRef = useRef(null);
+
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(
-        apiUrl + "/api/user/details",
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("currentuser"),
-          },
-        }
-      );
+      const response = await axios.get(apiUrl + "/api/user/details", {
+        headers: {
+          "x-access-token": localStorage.getItem("currentuser"),
+        },
+      });
       setUserVideoUrls(response.data.data.videos);
     } catch (error) {
       console.log(error);
@@ -38,29 +39,77 @@ export default function History() {
   useEffect(() => {
     fetchUserDetails();
   }, []);
+
   useEffect(() => {
-    let i = 0;
-    try {
-      const interval = setInterval(() => {
-        setTranslatedHistory(currentHistory.ProcessedData[i].sentence_till_now);
-        setTimeout(() => {
-          setTranslatedHistory(
-            currentHistory.ProcessedData[i++].llm_prediction
-          );
-        }, 500);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(interval);
-      }, currentHistory.ProcessedData.length * 1000);
-    } catch (error) {
-      console.log(error);
-    }
+    const interval = setInterval(() => {
+      if (currentHistory.Heading === "") return;
+      let predObject = currentHistory;
+      let wordMapper: any = {};
+      let allDurations: any = [];
+      for (let i = 0; i < predObject.ProcessedData.length; i++) {
+        wordMapper[predObject.ProcessedData[i].current_duration] = i;
+        allDurations.push(predObject.ProcessedData[i].current_duration);
+      }
+
+      if (playerRef.current) {
+        const currentTime = (playerRef.current as ReactPlayer).getCurrentTime();
+        let curTime = currentTime.toFixed(2);
+
+        for (let i = 0; i < allDurations.length; i++) {
+          // console.log(`Current Time: ${curTime} seconds, Duration: ${allDurations[i]} seconds`);
+          if (curTime < allDurations[i]) {
+            setTranslatedHistorySentence(
+              predObject.ProcessedData[wordMapper[allDurations[i]]]
+                .sentence_till_now,
+            );
+            setTranslatedHistoryLLm(
+              predObject.ProcessedData[wordMapper[allDurations[i]]]
+                .llm_prediction,
+            );
+            break;
+          }
+        }
+
+        // console.log(`Current Time: ${currentTime.toFixed(2)} seconds`);
+      }
+    }, 250);
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(interval);
   }, [currentHistory]);
+
+  // useEffect(() => {
+  //   let i = 0;
+  //   try {
+  //     // const interval = setInterval(() => {
+  //     //   setTranslatedHistory(currentHistory.ProcessedData[i].sentence_till_now);
+  //     //   setTimeout(() => {
+  //     //     setTranslatedHistory(
+  //     //       currentHistory.ProcessedData[i++].llm_prediction
+  //     //     );
+  //     //   }, 500);
+  //     // }, 1000);
+
+  //     (async ()=>{
+  //       currentHistory.ProcessedData.forEach(async (word)=>{
+  //         setTimeout(()=>{
+  //           setTranslatedHistorySentence(word.sentence_till_now);
+  //           setTranslatedHistoryLLm(word.llm_prediction);
+  //         },word.current_duration*1000);
+  //       });
+  //     })();
+  //     // setTimeout(() => {
+  //     //   clearInterval(interval);
+  //     // }, currentHistory.ProcessedData.length * 1000);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, [currentHistory]);
   return (
     <div className="History">
       <div className="HistoryCards">
         {userVideoUrls.map((video) => {
-          // if (video.processed_video_uri !== "") {
+          if (video.processed_video_uri !== "") {
             return (
               <Card
                 hoverable
@@ -88,7 +137,7 @@ export default function History() {
                 </p>
               </Card>
             );
-          // }
+          }
         })}
       </div>
       <div className="HistoryCardDetails">
@@ -103,12 +152,12 @@ export default function History() {
                 await window.navigator.clipboard.writeText(currentHistory.Url);
                 (
                   document.getElementById(
-                    "AfterCopyToClipBoard"
+                    "AfterCopyToClipBoard",
                   ) as HTMLObjectElement
                 ).style.display = "block";
                 setTimeout(() => {
                   document.getElementById(
-                    "AfterCopyToClipBoard"
+                    "AfterCopyToClipBoard",
                   )!.style.display = "none";
                 }, 1500);
               }}
@@ -128,12 +177,16 @@ export default function History() {
                 style={{ borderRadius: "10px" }}
                 controls={true}
                 playing={true}
+                ref={playerRef}
+                // onProgress={handleProgress}
               ></ReactPlayer>
             </div>
             <div className="HistoryTranslation">
-              <div className="WordTillNow"></div>
+              <div className="WordTillNow">
+                Raw Predictions:- {TranslatedHistorySentence}
+              </div>
               <div className="FullSentence">
-                Final Text :- {TranslatedHistory}
+                LLM Predicted :- {TranslatedHistoryLLm}
               </div>
             </div>
           </div>

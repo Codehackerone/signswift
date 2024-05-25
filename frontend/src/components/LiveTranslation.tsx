@@ -15,7 +15,7 @@ export default function LiveTranslation() {
   const [loading, setLoading] = useState(false);
   const [shrinked, setShrinked] = useState<boolean>(false);
   const [userVideo, setUserVideo] = useState<MediaStream | undefined>(
-    undefined
+    undefined,
   );
   const [videoFeedStyle, setVideoFeedStyle] = useState<Object>({
     width: "97%",
@@ -47,16 +47,16 @@ export default function LiveTranslation() {
     document.getElementsByClassName("VideoCaptureStart")[0].textContent =
       "Loading ...";
     await getUserWebcam();
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(true);
-    },1200);
+    }, 1200);
   };
-  const handleClose = async ()=>{
-    userVideo?.getTracks().forEach((track)=>{
+  const handleClose = async () => {
+    userVideo?.getTracks().forEach((track) => {
       track.stop();
     });
     setLoading(false);
-  }
+  };
   return (
     <div className="LiveTranslatorContainer">
       <div
@@ -80,7 +80,11 @@ export default function LiveTranslation() {
         <Button className="ShrinkExpandButton" onClick={handleShrinkExpand}>
           {ShrinkExpandButton(shrinked)}
         </Button>
-        {loading && <button className="VideoCaptureClose" onClick={handleClose}>Close</button>}
+        {loading && (
+          <button className="VideoCaptureClose" onClick={handleClose}>
+            Close
+          </button>
+        )}
       </div>
       <div className="languageFeed"></div>
     </div>

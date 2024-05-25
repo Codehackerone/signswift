@@ -25,15 +25,11 @@ export default function UploadVideo() {
     formData.append("file", file);
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        apiUrl + "/api/videos",
-        formData,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("currentuser"),
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "/api/videos", formData, {
+        headers: {
+          "x-access-token": localStorage.getItem("currentuser"),
+        },
+      });
       setVideoURL(response.data.url);
       setProcessedVideoId(response.data.videoId);
       setIsLoading(false);
@@ -68,15 +64,11 @@ export default function UploadVideo() {
     formData.append("file", file);
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        apiUrl + "/api/videos",
-        formData,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("currentuser"),
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "/api/videos", formData, {
+        headers: {
+          "x-access-token": localStorage.getItem("currentuser"),
+        },
+      });
       setVideoURL(response.data.url);
       setIsLoading(false);
       setUploaded(true);
@@ -264,8 +256,10 @@ export default function UploadVideo() {
       <div className="VideoResult">
         {videoSentenceTillNow !== "" && (
           <div className="VideoSentenceTillNow">
-            Analysing video....  {videoSentenceTillNow}
-            <span>{!afterProcessing && "("+processVideoDetails.length+"secs)"}</span>
+            Analysing video.... {videoSentenceTillNow}
+            <span>
+              {!afterProcessing && "(" + processVideoDetails.length + "secs)"}
+            </span>
           </div>
         )}
         {videoFinalSentence !== "" && (

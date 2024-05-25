@@ -61,7 +61,7 @@ export default function Login() {
       if (loginsign === "Sign Up") {
         const signInUser = await axios.post(
           apiUrl + "/api/user/register",
-          signUpLogInForm
+          signUpLogInForm,
         );
         // console.log(signInUser.data);
         setLoginSign("Login");
@@ -69,10 +69,10 @@ export default function Login() {
       } else {
         const logInUser = await axios.post(
           apiUrl + "/api/user/login",
-          signUpLogInForm
+          signUpLogInForm,
         );
         // console.log(logInUser);
-        localStorage.setItem("currentuser",logInUser.data.auth);
+        localStorage.setItem("currentuser", logInUser.data.auth);
         loggedin.setloggedin(true);
         navigate("/user/LiveTranslation");
       }
@@ -105,7 +105,7 @@ export default function Login() {
               contentBg: "#001529",
               titleColor: "#ffffff",
               colorText: "#ffffff",
-              fontFamily:"Play"
+              fontFamily: "Play",
             },
           },
         }}
@@ -227,11 +227,7 @@ export default function Login() {
           </div>
 
           {/* SUBMIT BUTTON */}
-          <button
-            className="submit"
-            type="submit"
-            onClick={handleSignIn}
-          >
+          <button className="submit" type="submit" onClick={handleSignIn}>
             {loginsign}
           </button>
         </div>

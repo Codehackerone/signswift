@@ -42,7 +42,7 @@ input {
   outline: none;
   color: black;
   font-family: "Play", sans-serif;
-  text-align:calc(40px);
+  text-align: calc(40px);
 }
 .emailInput {
   transition: 800ms;
@@ -75,9 +75,9 @@ input {
   /* background: linear-gradient(to right, #063b6d, #001529); */
   background: #063b6d;
 }
-.transitionLoginToSignUp{
-    width: 15%;
-    margin-top: 1vh;
+.transitionLoginToSignUp {
+  width: 15%;
+  margin-top: 1vh;
 }
 .transitionButton {
   width: 15vh;
@@ -90,6 +90,6 @@ input {
   color: white;
   font-family: "Play", sans-serif;
 }
-.transitionButton:hover{
-    background: linear-gradient(to right, #063b6d, #001529);
+.transitionButton:hover {
+  background: linear-gradient(to right, #063b6d, #001529);
 }

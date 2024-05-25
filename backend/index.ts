@@ -12,9 +12,9 @@ dotenv.config();
 const dbURL = process.env.MONGO_URL!;
 const PORT = process.env.PORT || 9876;
 mongoose
-    .connect(dbURL)
-    .then(() => console.log("Connected to DB successfully!"))
-    .catch(err => console.log(err));
+  .connect(dbURL)
+  .then(() => console.log("Connected to DB successfully!"))
+  .catch((err) => console.log(err));
 
 const app = express();
 
@@ -25,18 +25,15 @@ app.use("/api/user", userRoutes);
 app.use("/api/videos", videoRoutes);
 
 app.use(
-    (err: ExpressError, req: Request, res: Response, next: NextFunction) => {
-        if (!err.statusCode) {
-            return res
-                .status(500)
-                .json({ message: err.message, statusCode: 500 });
-        }
-        const { statusCode } = err;
-        res.status(statusCode).json(err);
+  (err: ExpressError, req: Request, res: Response, next: NextFunction) => {
+    if (!err.statusCode) {
+      return res.status(500).json({ message: err.message, statusCode: 500 });
     }
+    const { statusCode } = err;
+    res.status(statusCode).json(err);
+  },
 );
 
-
 app.listen(PORT, () => {
-    console.log(`Connected to PORT ${PORT}`);
+  console.log(`Connected to PORT ${PORT}`);
 });
