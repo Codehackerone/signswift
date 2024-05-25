@@ -1,0 +1,270 @@
+@import url("https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap");
+.UploadVideoContainer {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  justify-content: space-evenly;
+  align-items: center;
+  overflow-y: scroll;
+}
+.UploadVideoContainer::-webkit-scrollbar {
+  display: none;
+}
+.UploadedVideoInnerContainer {
+  position: relative;
+  width: 97%;
+  min-width: 80vw;
+  max-width: 100vw;
+  height: 80%;
+  min-height: 80%;
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  background: rgb(36, 45, 56);
+  border-radius: 10px;
+  transition: all 200ms linear;
+}
+.VideoResult {
+  width: 97%;
+  min-width: 80vw;
+  max-width: 100vw;
+  color: white;
+  box-shadow: inset 0px 0px 5px 0px grey;
+  background: rgb(36, 45, 56);
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 15px;
+  text-align: justify;
+}
+.UploadVideoButtonContainer {
+  position: absolute;
+  z-index: 999;
+  /* top: 44%;
+  left: 45%; */
+  /* top: 258.677px;
+  left: 847.156px; */
+  display: flex;
+  row-gap: 0.7em;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* overflow: hidden; */
+  /* width: 98px; */
+  /* background-color: red; */
+}
+
+.SlidingAnimation {
+  animation: slide 300ms ease-in-out forwards;
+}
+@keyframes slide {
+  from {
+    top: 44%;
+    left: 45%;
+    scale: 1;
+    opacity: 1;
+  }
+  to {
+    top: 82%;
+    left: 88%;
+    scale: 0.5;
+    opacity: 0;
+    display: none;
+  }
+}
+.FileUploadText {
+}
+.UploadedVideoInnerContainer iframe {
+  border-radius: 10px;
+  object-fit: fill;
+  /* box-shadow: 0px 0px 5px 1px grey; */
+}
+.UploadVideoButton:active {
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.FileUpload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1em;
+}
+#FileUpload {
+  display: none;
+}
+.FileInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.FileUploadLabel {
+  background: white;
+  width: 8em;
+  height: 2em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  /* box-shadow: 0px 0px 5px 0px grey; */
+  box-shadow: inset 0px 0px 10px 0px rgb(9, 9, 9);
+  border-radius: 10px;
+  font-family: "Play";
+  cursor: pointer;
+}
+.FileUploadLabel:active {
+  transform: scale(0.95);
+  box-shadow: inset 0px 0px 20px 0px rgb(9, 9, 9);
+}
+.UploadSubmitButton {
+  background: white;
+  width: 5em;
+  height: 1.8em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4em;
+  /* box-shadow: 0px 0px 5px 0px grey; */
+  box-shadow: inset 0px 0px 10px 0px rgb(9, 9, 9);
+  border: 0px;
+  border-radius: 10px;
+  font-family: "Play";
+  cursor: pointer;
+}
+.UploadSubmitButton:active {
+  transform: scale(0.95);
+  box-shadow: inset 0px 0px 20px 0px rgb(9, 9, 9);
+}
+.AfterUploadButton {
+  position: absolute;
+  bottom: 2%;
+  right: 1%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 100px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: inset 0px 0px 6px 0px rgb(9, 9, 9);
+  transition: all 1s linear;
+  scale: 0;
+  /* display: none; */
+  /* filter: invert(100%); */
+}
+/* .AfterUploadButton::after{
+  content: "Upload";
+} */
+#AfterUploadButtonLabel {
+  /* display: none; */
+  position: absolute;
+  background: white;
+  box-shadow: inset 0px 0px 10px 0px rgb(0, 0, 0);
+  width: 60px;
+  top: 110%;
+  left: -24%;
+  text-align: center;
+  padding: 2px;
+  border-radius: 10px;
+  font-family: "Play";
+}
+.AfterUploadButton:active {
+  box-shadow: inset 0px 0px 10px 0px rgb(0, 0, 0);
+  transform: scale(0.5);
+}
+.Display-None {
+  /* display: none; */
+  animation: shrink 300ms linear forwards;
+}
+@keyframes shrink {
+  0% {
+    scale: 0;
+  }
+  98% {
+    scale: 1.5;
+  }
+  100% {
+    scale: 1;
+  }
+}
+#AfterUploadSubmitButton {
+  scale: 0;
+  position: absolute;
+  bottom: 2.9%;
+  right: 1%;
+  z-index: 9;
+  border: 0px;
+  background-color: white;
+  box-shadow: inset 0px 0px 10px 0px rgb(0, 0, 0);
+  border-radius: 10px;
+  text-align: center;
+  font-family: "Play";
+}
+#AfterUploadSubmitButton:active{
+  scale: 0.8;
+  box-shadow: inset 0px 0px 15px 0px rgb(0, 0, 0);
+}
+.AfterUploadSubmitButtonAnimation {
+  /* scale: 1; */
+  animation: slideLeft 300ms linear forwards;
+}
+@keyframes slideLeft {
+  0% {
+    right: 1%;
+  }
+  1% {
+    scale: 1;
+  }
+  100% {
+    right: 4%;
+    scale: 1;
+  }
+}
+.AfterUploadButtonLabelContainer{
+  /* display: flex; */
+  /* flex-direction: column; */
+}
+/* .FileUpload {
+  border-radius: 10px;
+  cursor: pointer;
+}
+.FileUpload:hover,
+.FileUpload:active {
+  cursor: pointer;
+} */
+.StartProcessing{
+  position: absolute;
+  /* width: 100px; */
+  top: 2%;
+  right: 1%;
+  z-index: 9;
+  border: 0px;
+  background-color: white;
+  box-shadow: inset 0px 0px 10px 0px rgb(0, 0, 0);
+  border-radius: 10px;
+  text-align: center;
+  font-family: "Play";
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+}
+.StartProcessing:active{
+  scale: 0.95;
+  box-shadow: inset 0px 0px 15px 0px rgb(0, 0, 0);
+}
+.VideoResult{
+  font-family: "Play";
+}
+.VideoFinalSentence{
+  font-size: 2rem;
+}
