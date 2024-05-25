@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../componentsCss/HistoryCss.css";
-import { Card } from "antd";
+import { Card, Select } from "antd";
 import axios from "axios";
 import ReactPlayer from "react-player";
 import { CopyOutlined } from "@ant-design/icons";
@@ -14,6 +14,7 @@ interface currentHistoryType {
 export default function History() {
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
   const [userVideoUrls, setUserVideoUrls] = useState<any[]>([]);
+  const [translateWord , settranslateWord] = useState<string>("");
   const [currentHistory, setCurrentHistory] = useState<currentHistoryType>({
     Heading: "",
     Url: "",
@@ -40,39 +41,51 @@ export default function History() {
     fetchUserDetails();
   }, []);
 
+  const handleChange = (value: string) => {
+    settranslateWord(value);
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentHistory.Heading === "") return;
       let predObject = currentHistory;
       let wordMapper: any = {};
-      let allDurations: any = [];
+      let allDurations: any = [0.0];
       for (let i = 0; i < predObject.ProcessedData.length; i++) {
         wordMapper[predObject.ProcessedData[i].current_duration] = i;
         allDurations.push(predObject.ProcessedData[i].current_duration);
       }
+      // allDurations.push(predObject.ProcessedData[predObject.ProcessedData.length - 1].current_duration);
 
+      
       if (playerRef.current) {
         const currentTime = (playerRef.current as ReactPlayer).getCurrentTime();
         let curTime = currentTime.toFixed(2);
 
-        for (let i = 0; i < allDurations.length; i++) {
-          // console.log(`Current Time: ${curTime} seconds, Duration: ${allDurations[i]} seconds`);
-          if (curTime < allDurations[i]) {
-            setTranslatedHistorySentence(
-              predObject.ProcessedData[wordMapper[allDurations[i]]]
-                .sentence_till_now,
-            );
-            setTranslatedHistoryLLm(
-              predObject.ProcessedData[wordMapper[allDurations[i]]]
-                .llm_prediction,
-            );
-            break;
+        if (Number(curTime) === 0.00) return;
+
+        // if (curTime < allDurations[0]) return;
+
+        for (let i = 1; i < allDurations.length; i++) {    
+          console.log(curTime, allDurations[i - 1], allDurations[i]);      
+          if (curTime > allDurations[i-1] && curTime <= allDurations[i]) {
+            let sentence = predObject.ProcessedData[wordMapper[allDurations[i]]].sentence_till_now;
+            setTranslatedHistorySentence(sentence);
+            let llm_prediction = predObject.ProcessedData[wordMapper[allDurations[i]]].llm_prediction;
+            if (llm_prediction === undefined || llm_prediction === null || llm_prediction === ""){
+              setTranslatedHistoryLLm(sentence);
+            }
+            else{
+              setTranslatedHistoryLLm(
+                predObject.ProcessedData[wordMapper[allDurations[i]]]
+                  .llm_prediction,
+              );
+            }
+            return;
           }
         }
-
-        // console.log(`Current Time: ${currentTime.toFixed(2)} seconds`);
       }
-    }, 250);
+    }, 1000);
 
     // Cleanup the interval on component unmount
     return () => clearInterval(interval);
@@ -176,18 +189,37 @@ export default function History() {
                 height={"100%"}
                 style={{ borderRadius: "10px" }}
                 controls={true}
-                playing={true}
+                playing={false}
                 ref={playerRef}
                 // onProgress={handleProgress}
               ></ReactPlayer>
             </div>
             <div className="HistoryTranslation">
-              <div className="WordTillNow">
+              <Select                
+                  defaultValue="select"
+                  style={{ width: 120 }}
+                  onChange={handleChange}
+                  options={[
+                    { value: 'select', label: 'Select Language' },
+                    { value: 'french', label: 'French' },
+                    { value: 'hindi', label: 'Hindi' },
+                    { value: 'bengali', label: 'Bengali' },
+                    { value: 'german', label: 'German' },
+                    { value: 'spanish', label: 'Spanish' },
+                    { value: 'japanese', label: 'Japanese' },
+                  ]}
+                />
+                <br />
+                <br />
                 Raw Predictions:- {TranslatedHistorySentence}
+                <br />
+                LLM Predicted :- {TranslatedHistoryLLm}
+              {/* <div className="WordTillNow">
+                
               </div>
               <div className="FullSentence">
-                LLM Predicted :- {TranslatedHistoryLLm}
-              </div>
+                
+              </div> */}
             </div>
           </div>
         )}
