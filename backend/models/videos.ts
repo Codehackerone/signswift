@@ -10,6 +10,7 @@ interface Inference {
 
 export interface IVideo {
   publicId: string;
+  name: string;
   userId: string;
   url: string;
   status: "queued" | "processed";
@@ -23,6 +24,7 @@ const videoSchema = new Schema<IVideo, Model<IVideo>>(
     status: { type: String, required: true },
     processed_video_uri: { type: String, default: "" },
     userId: { type: String, required: true },
+    name: { type: String, required: true },
     publicId: { type: String, required: true },
     processed_data: [
       {

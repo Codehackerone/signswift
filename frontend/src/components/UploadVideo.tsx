@@ -19,6 +19,7 @@ export default function UploadVideo() {
   const [newUpload, setNewUpload] = useState<boolean>(false);
   const [fileUploadStyle, setFileUploadStyle] = useState<{}>({});
   const [mouseOver, setMouseOver] = useState<boolean>(false);
+  const [fileName, setFileName] = useState("");
 
   const handleUpload = async (e: React.MouseEvent<HTMLElement>) => {
     const formData = new FormData();
@@ -174,13 +175,18 @@ export default function UploadVideo() {
               accept="video/*"
               onChange={async (e) => {
                 setFile(e.target.files ? e.target.files[0] : "");
+                setFileName(e.target.files ? e.target.files[0].name : "");
               }}
             />
             <label htmlFor="FileUpload" className="FileUploadLabel">
               <UploadOutlined
-                style={{ fontSize: "1em", marginRight: "10px" }}
+              // style={{ fontSize: "1em", marginRight: "10px" }}
               />
-              <span className="FileUploadText">Upload File</span>
+              <span className="FileUploadText">
+                <span className="FileUploadText">
+                  {fileName === "" ? "Upload Video" : fileName}
+                </span>
+              </span>
             </label>
           </div>
           <button

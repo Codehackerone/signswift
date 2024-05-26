@@ -185,6 +185,7 @@ export const addVideo = async (
     publicId,
     userId,
     status: "queued",
+    name: file.originalname,
   });
   await video.save();
 

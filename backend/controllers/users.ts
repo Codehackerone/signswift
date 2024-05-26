@@ -119,6 +119,7 @@ export const getDetails = async (
         username: 1,
         phoneNumber: 1,
         videos: {
+          name: 1,
           url: 1,
           status: 1,
           processed_video_uri: 1,
