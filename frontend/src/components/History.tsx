@@ -139,12 +139,13 @@ export default function History() {
       let allDurations: any = [0.0];
       for (let i = 0; i < predObject.ProcessedData.length; i++) {
         wordMapper[predObject.ProcessedData[i].current_duration] = i;
-        allDurations.push(predObject.ProcessedData[i].current_duration);
+        allDurations.push(parseInt(predObject.ProcessedData[i].current_duration));
       }
       // allDurations.push(predObject.ProcessedData[predObject.ProcessedData.length - 1].current_duration);
 
       if (playerRef.current) {
         const currentTime = (playerRef.current as ReactPlayer).getCurrentTime();
+        if (currentTime === null || currentTime === undefined) return;
         let curTime = currentTime.toFixed(2);
 
         if (Number(curTime) === 0.0) return;
