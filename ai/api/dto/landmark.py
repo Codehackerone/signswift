@@ -6,9 +6,9 @@ class LandMark:
         """
         Initialize the LandMark object.
         """
-        self.x: float = 0.0
-        self.y: float = 0.0
-        self.z: float = 0.0
+        self.x: float = None
+        self.y: float = None
+        self.z: float = None
         self.frame: int = 0
         self.type: str = ""
         self.landmark_index: int = 0

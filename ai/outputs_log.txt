@@ -1,0 +1,2 @@
+[INFO]: Mistral API is healthy.
+[INFO]: Mistral API is healthy.

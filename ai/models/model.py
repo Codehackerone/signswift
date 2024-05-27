@@ -645,7 +645,7 @@ class Model(object):
 
 
 if __name__ == "__main__":
-    csv_path = FILE_PATH + "/tests/test_keypoints.csv"
+    csv_path = "/home/soumyajit/sign/keypoint/signswift/ai/api/dump/test_df/0.csv"
     data = pd.read_csv(csv_path, usecols=["x", "y", "z"])
     model = Model(
         model_path=FILE_PATH + "/weights/islr-fp16-192-8-seed42-foldall-last.h5"
