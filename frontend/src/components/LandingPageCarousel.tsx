@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function LandingPageCarousel() {
   const navigate = useNavigate();
-  useEffect(()=>{
-    if (localStorage.getItem("currentuser")!==null) {
+  useEffect(() => {
+    if (localStorage.getItem("currentuser") !== null) {
       navigate("/user/LiveTranslation");
     }
-  },[]);
+  }, []);
   return (
     <div>
       <Carousel autoplay={true} dots={false}>
@@ -21,7 +21,6 @@ export default function LandingPageCarousel() {
         </div>
         <div>
           <ImageSlider2></ImageSlider2>
-          
         </div>
       </Carousel>
       <LanguageDetails></LanguageDetails>

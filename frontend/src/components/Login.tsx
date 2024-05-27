@@ -20,6 +20,7 @@ interface signUpFormDatatype {
 }
 
 export default function Login() {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
   const loggedin = useContext(loginContext);
   const [loginsign, setLoginSign] = useState("Sign Up");
@@ -59,19 +60,19 @@ export default function Login() {
     try {
       if (loginsign === "Sign Up") {
         const signInUser = await axios.post(
-          "http://127.0.0.1:8080/api/user/register",
-          signUpLogInForm
+          apiUrl + "/api/user/register",
+          signUpLogInForm,
         );
         // console.log(signInUser.data);
         setLoginSign("Login");
         setIsModalOpen(true);
       } else {
         const logInUser = await axios.post(
-          "http://127.0.0.1:8080/api/user/login",
-          signUpLogInForm
+          apiUrl + "/api/user/login",
+          signUpLogInForm,
         );
         // console.log(logInUser);
-        localStorage.setItem("currentuser",logInUser.data.auth);
+        localStorage.setItem("currentuser", logInUser.data.auth);
         loggedin.setloggedin(true);
         navigate("/user/LiveTranslation");
       }
@@ -104,7 +105,7 @@ export default function Login() {
               contentBg: "#001529",
               titleColor: "#ffffff",
               colorText: "#ffffff",
-              fontFamily:"Play"
+              fontFamily: "Play",
             },
           },
         }}
@@ -226,11 +227,7 @@ export default function Login() {
           </div>
 
           {/* SUBMIT BUTTON */}
-          <button
-            className="submit"
-            type="submit"
-            onClick={handleSignIn}
-          >
+          <button className="submit" type="submit" onClick={handleSignIn}>
             {loginsign}
           </button>
         </div>

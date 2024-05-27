@@ -13,7 +13,7 @@ export const loginContext = createContext<appValue>({
 });
 export default function LoginProvider({ children }: appChildren) {
   const [loggedin, setloggedin] = useState(
-    localStorage.getItem("currentuser") === null ? false : true
+    localStorage.getItem("currentuser") === null ? false : true,
   );
   // useEffect(() => {
   //   console.log(loggedin);

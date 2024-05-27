@@ -3,128 +3,145 @@ import User from "../models/users";
 import ExpressError from "../utils/ExpressError";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
-import { isValidId } from "../utils/checker";
-import { IVideo } from "../models/videos";
+import { isValidId, toMongoId } from "../utils/checker";
+import { UserType } from "../types/user";
 
 export const register = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-    // Retrieve data from request body
-    const { name, email, username, password, phoneNumber } = req.body;
+  // Retrieve data from request body
+  const { name, email, username, password, phoneNumber } = req.body;
 
-    // Check for missing parameters
-    if (!email || !username || !password || !name) {
-        return next(new ExpressError("Missing parameters!", 400));
-    }
+  // Check for missing parameters
+  if (!email || !username || !password || !name) {
+    return next(new ExpressError("Missing parameters!", 400));
+  }
 
-    // Fetch user from database
-    const user = await User.findOne({ email });
+  // Fetch user from database
+  const user = await User.findOne({ email });
 
-    // Check the user already exists or not
-    if (user) {
-        return next(new ExpressError("User already exists!", 409));
-    }
+  // Check the user already exists or not
+  if (user) {
+    return next(new ExpressError("User already exists!", 409));
+  }
 
-    // User can be registered now
-    // Generate hashed password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Create new user
-    const newUser = new User({
-        email,
-        username,
-        password: hashedPassword,
-        name,
-        phoneNumber
-    });
-    // Save in database
-    await newUser.save();
+  // User can be registered now
+  // Generate hashed password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  // Create new user
+  const newUser = new User({
+    email,
+    username,
+    password: hashedPassword,
+    name,
+    phoneNumber,
+  });
+  // Save in database
+  await newUser.save();
 
-    // User successfully registered
-    res.status(200).json({
-        message: "User registered successfully!"
-    });
+  // User successfully registered
+  res.status(200).json({
+    message: "User registered successfully!",
+  });
 };
 
 export const login = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-    // Retrieve data from request body
-    const { email, password } = req.body;
+  // Retrieve data from request body
+  const { email, password } = req.body;
 
-    // Check for missing parameters
-    if (!email || !password) {
-        return next(new ExpressError("Missing parameters!", 400));
-    }
+  // Check for missing parameters
+  if (!email || !password) {
+    return next(new ExpressError("Missing parameters!", 400));
+  }
 
-    // Fetch user from database
-    const user = await User.findOne({ email });
+  // Fetch user from database
+  const user = await User.findOne({ email });
 
-    // Check the user exists or not
-    if (!user) {
-        return next(
-            new ExpressError("User doesn't not exist. Kindly register!", 404)
-        );
-    }
+  // Check the user exists or not
+  if (!user) {
+    return next(
+      new ExpressError("User doesn't not exist. Kindly register!", 404),
+    );
+  }
 
-    // If the user exist, the match the password
-    const isMatch = await bcrypt.compare(password, user.password);
+  // If the user exist, the match the password
+  const isMatch = await bcrypt.compare(password, user.password);
 
-    // If the password matches, then user can be logged in
-    if (isMatch) {
-        // sending jwt token that will be stored in local storage in front end
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET as Secret
-        );
-        return res
-            .status(200)
-            .json({ message: "User logged in successfully!", auth: token });
-    }
-    // Else send appropriate error
-    else {
-        return next(new ExpressError("Invalid Credentials", 404));
-    }
+  // If the password matches, then user can be logged in
+  if (isMatch) {
+    // sending jwt token that will be stored in local storage in front end
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as Secret);
+    return res
+      .status(200)
+      .json({ message: "User logged in successfully!", auth: token });
+  }
+  // Else send appropriate error
+  else {
+    return next(new ExpressError("Invalid Credentials", 404));
+  }
 };
 
 export const getDetails = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-    // Get user id from locals (set up through middleware)
-    const userId = res.locals.data.id;
+  // Get user id from locals (set up through middleware)
+  const userId = res.locals.data.id;
 
-    // Check if the user id is valid or not
-    if (!isValidId(userId)) {
-        return next(new ExpressError("Invalid user Id", 403));
-    }
+  // Check if the user id is valid or not
+  if (!isValidId(userId)) {
+    return next(new ExpressError("Invalid user Id", 403));
+  }
 
-    // Fetch user from database
-    const user = await User.findById(userId).populate<{ videos: IVideo[] }>(
-        "videos"
-    );
+  // Get the details of the user using aggregation
+  const user = await User.aggregate<UserType>([
+    { $match: { _id: toMongoId(userId) } },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        name: 1,
+        email: 1,
+        username: 1,
+        phoneNumber: 1,
+        videos: {
+          name: 1,
+          url: 1,
+          status: 1,
+          processed_video_uri: 1,
+          processed_data: {
+            word: 1,
+            probability: 1,
+            current_duration: 1,
+            sentence_till_now: 1,
+            llm_prediction: 1,
+          },
+        },
+      },
+    },
+  ]);
 
-    // Check if user is present or not
-    if (!user) {
-        return next(new ExpressError("User not found!", 404));
-    }
+  // Check if user is present or not
+  if (user.length === 0) {
+    return next(new ExpressError("User not found!", 404));
+  }
 
-    // Destucture data from user
-    const { name, username, email, phoneNumber } = user;
-
-    // Extract useful properties from video data
-    const videos = user.videos.map(video => {
-        return {
-            url: video.url,
-            processed_data: video.processed_data,
-            processed_video_uri: video.processed_video_uri,
-            status: video.status
-        };
-    });
-
-    return res.status(200).json({ name, username, email, videos, phoneNumber });
+  return res.status(200).json({
+    message: "User details fetched successfully!",
+    data: { ...user[0] },
+  });
 };

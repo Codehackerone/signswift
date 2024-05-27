@@ -145,7 +145,7 @@
   transform: scale(0.95);
   box-shadow: inset 0px 0px 20px 0px rgb(9, 9, 9);
 }
-.VideoCaptureClose{
+.VideoCaptureClose {
   position: absolute;
   right: 1.9%;
   top: 8%;
@@ -163,7 +163,7 @@
   cursor: pointer;
   border: 0px;
 }
-.VideoCaptureClose:active{
+.VideoCaptureClose:active {
   transform: scale(0.95);
   box-shadow: inset 0px 0px 20px 0px rgb(9, 9, 9);
 }

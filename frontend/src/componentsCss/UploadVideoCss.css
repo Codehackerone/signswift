@@ -104,7 +104,7 @@
 }
 .FileUploadLabel {
   background: white;
-  width: 8em;
+  width: 15em;
   height: 2em;
   text-align: center;
   display: flex;
@@ -208,7 +208,7 @@
   text-align: center;
   font-family: "Play";
 }
-#AfterUploadSubmitButton:active{
+#AfterUploadSubmitButton:active {
   scale: 0.8;
   box-shadow: inset 0px 0px 15px 0px rgb(0, 0, 0);
 }
@@ -228,7 +228,7 @@
     scale: 1;
   }
 }
-.AfterUploadButtonLabelContainer{
+.AfterUploadButtonLabelContainer {
   /* display: flex; */
   /* flex-direction: column; */
 }
@@ -240,7 +240,7 @@
 .FileUpload:active {
   cursor: pointer;
 } */
-.StartProcessing{
+.StartProcessing {
   position: absolute;
   /* width: 100px; */
   top: 2%;
@@ -258,13 +258,13 @@
   align-items: center;
   column-gap: 5px;
 }
-.StartProcessing:active{
+.StartProcessing:active {
   scale: 0.95;
   box-shadow: inset 0px 0px 15px 0px rgb(0, 0, 0);
 }
-.VideoResult{
+.VideoResult {
   font-family: "Play";
 }
-.VideoFinalSentence{
+.VideoFinalSentence {
   font-size: 2rem;
 }

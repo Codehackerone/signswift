@@ -9,6 +9,7 @@ from starlette.responses import Response
 from api.utils.exception import ApiException
 from api.services.queue import QueueService
 from api.dto.request import AddQueue
+from api.services.logWriter import LogWriter
 from typing import Union
 import warnings
 from aiocron import crontab
@@ -26,6 +27,7 @@ app: FastAPI = FastAPI(
 logger: RequestLogger = RequestLogger(f"{LOGS_DIR}/requests.log")
 queue: QueueService = QueueService()
 semaphore = asyncio.Semaphore(1)
+log_writer = LogWriter(max_size=1000)
 
 
 async def cron_service() -> None:
@@ -38,7 +40,7 @@ async def cron_service() -> None:
         return
     if queue:
         async with semaphore:
-            await queue.task()
+            await queue.task(log_writer)
 
 
 def run_cron_service() -> None:
@@ -96,6 +98,28 @@ async def health() -> (
     return SuccessMessage(
         message="The SignSwift AI Backend API is healthy.", status_code=200
     )
+
+
+@MessageWrapper
+@app.get("/logs", response_model=None)
+async def get_logs() -> (
+    Union[SuccessMessage, ApiException, ErrorMessage, Exception, None]
+):
+    """
+    Endpoint to get the logs from the log writer.
+
+    Returns:
+        Union[SuccessMessage, ApiException, ErrorMessage, Exception, None]: The response message.
+    """
+    try:
+        logs = log_writer.get_logs()
+        return SuccessMessage(
+            message="Logs fetched successfully.", content=logs, status_code=200
+        )
+    except Exception as e:
+        return ErrorMessage(
+            message="Failed to fetch logs.", status_code=500, details=str(e)
+        )
 
 
 @MessageWrapper

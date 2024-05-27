@@ -12,6 +12,7 @@ from moviepy.editor import VideoFileClip
 from api.dto.prediction import Prediction
 from api.dto.landmark import LandMark
 from api.utils.exception import ApiException
+from api.services.logWriter import LogWriter
 
 
 class VideoPrediction:
@@ -130,9 +131,9 @@ class VideoPrediction:
             for i in range(468):
                 objects.append(
                     LandMark().add(
-                        x=res.x,
-                        y=res.y,
-                        z=res.z,
+                        x=np.nan,
+                        y=np.nan,
+                        z=np.nan,
                         frame=frame_id,
                         type="face",
                         landmark_index=i,
@@ -148,7 +149,7 @@ class VideoPrediction:
                         y=res.y,
                         z=res.z,
                         frame=frame_id,
-                        type="face",
+                        type="left",
                         landmark_index=i,
                     )
                 )
@@ -156,11 +157,11 @@ class VideoPrediction:
             for i in range(21):
                 objects.append(
                     LandMark().add(
-                        x=res.x,
-                        y=res.y,
-                        z=res.z,
+                        x=np.nan,
+                        y=np.nan,
+                        z=np.nan,
                         frame=frame_id,
-                        type="face",
+                        type="left",
                         landmark_index=i,
                     )
                 )
@@ -174,7 +175,7 @@ class VideoPrediction:
                         y=res.y,
                         z=res.z,
                         frame=frame_id,
-                        type="face",
+                        type="pose",
                         landmark_index=i,
                     )
                 )
@@ -182,11 +183,11 @@ class VideoPrediction:
             for i in range(33):
                 objects.append(
                     LandMark().add(
-                        x=res.x,
-                        y=res.y,
-                        z=res.z,
+                        x=np.nan,
+                        y=np.nan,
+                        z=np.nan,
                         frame=frame_id,
-                        type="face",
+                        type="pose",
                         landmark_index=i,
                     )
                 )
@@ -200,7 +201,7 @@ class VideoPrediction:
                         y=res.y,
                         z=res.z,
                         frame=frame_id,
-                        type="face",
+                        type="right",
                         landmark_index=i,
                     )
                 )
@@ -208,11 +209,11 @@ class VideoPrediction:
             for i in range(21):
                 objects.append(
                     LandMark().add(
-                        x=res.x,
-                        y=res.y,
-                        z=res.z,
+                        x=np.nan,
+                        y=np.nan,
+                        z=np.nan,
                         frame=frame_id,
-                        type="face",
+                        type="right",
                         landmark_index=i,
                     )
                 )
@@ -254,7 +255,12 @@ class VideoPrediction:
         return current_duration
 
     async def predict_video(
-        self, mistral: MistralAPI, model: Model, video_path: str, output_path: str
+        self,
+        mistral: MistralAPI,
+        model: Model,
+        video_path: str,
+        output_path: str,
+        log_writer: LogWriter,
     ) -> Tuple[List[Dict[str, Union[str, float]]], List[str]]:
         """
         Predict the sign language gestures in a video.
@@ -264,6 +270,7 @@ class VideoPrediction:
             model (Model): The sign language gesture recognition model.
             video_path (str): The path of the input video.
             output_path (str): The path to save the output video.
+            log_writer (LogWriter): The log writer instance.
 
         Returns:
             Tuple[List[Dict[str, Union[str, float]]], List[str]]: The predictions and the generated sentence.
@@ -287,7 +294,6 @@ class VideoPrediction:
 
             image, results = self.mediapipe_detection(frame, self.holistic)
             self.draw_styled_landmarks(image, results)
-
             if len(sequence) < NUMBER_OF_FRAMES:
                 sequence.append(self.extract_keypoints(str(frame_id), results))
             elif len(sequence) == NUMBER_OF_FRAMES:
@@ -299,6 +305,7 @@ class VideoPrediction:
                 df_imp = df.drop(["frame", "type", "landmark_index"], axis=1)
 
                 print("[INFO]: Predicting")
+                log_writer.add_log("info", "Predicting")
                 prediction, max_prob = model.predict(df_imp)
 
                 #   if max_prob < MIN_THRESHOLD:
@@ -306,12 +313,15 @@ class VideoPrediction:
                 #   else:
                 # Remove repeated words
                 if len(predictions) > 0 and prediction == predictions[-1].word:
-                    if max_prob > predictions[-1].probability:
-                        predictions[-1]["probability"] = str(max_prob)
+                    # if max_prob > predictions[-1].probability:
+                    #     predictions[-1]["probability"] = str(max_prob)
+                    pass
                 else:
                     sentence.append(prediction)
-                    llm_prediction = mistral.call_mistral_api(
-                        PROMPT(" ".join(sentence))
+                    llm_prediction = (
+                        mistral.call_mistral_api(PROMPT(" ".join(sentence)))
+                        if len(sentence) > 2
+                        else ""
                     )
                     prediction_obj = Prediction().add(
                         word=prediction,
@@ -335,7 +345,12 @@ class VideoPrediction:
         return predictions, sentence
 
     async def main(
-        self, mistral: MistralAPI, model: Model, video_path: str, save_name: str
+        self,
+        mistral: MistralAPI,
+        model: Model,
+        video_path: str,
+        save_name: str,
+        log_writer: LogWriter,
     ) -> None:
         """
         Perform sign language gesture prediction on a video.
@@ -345,6 +360,7 @@ class VideoPrediction:
             model (Model): The sign language gesture recognition model.
             video_path (str): The path of the input video.
             save_name (str): The name to be used for saving the output files.
+            log_writer (LogWriter): The log writer instance.
         """
         try:
             video_save_path_avi = f"{FILE_PATH}/api/dump/{save_name}_processed.avi"
@@ -354,6 +370,7 @@ class VideoPrediction:
                 model=model,
                 video_path=video_path,
                 output_path=video_save_path_avi,
+                log_writer=log_writer,
             )
             await self.convert_avi_to_mp4(
                 input_file=video_save_path_avi, output_file=video_save_path_mp4

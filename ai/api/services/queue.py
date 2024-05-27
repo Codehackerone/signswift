@@ -81,9 +81,10 @@ class QueueService(object):
         return -1
 
     @classmethod
-    async def task(self) -> None:
+    async def task(self, log_writer) -> None:
         print("Running task.")
         if len(self.queue) == 0:
+            log_writer.add_log("info", "No videos in the queue.")
             print("No videos in the queue.")
             self.__load_queue()
             return
@@ -97,9 +98,18 @@ class QueueService(object):
         video = self.queue[0]
         try:
             # Download the Video from Cloduinary
+            print(f"Start processing video: {video.video_id}")
+            log_writer.add_log("info", f"Start processing video: {video.video_id}")
+
+            print(f"Dowloading video from {video.url}")
+            log_writer.add_log("info", f"Dowloading video from {video.url}")
             cloudinary_service = CloudinaryService(video.url, video.video_id)
             path = cloudinary_service.download_video()
 
+            print(f"Downloaded video to {path}")
+            log_writer.add_log("info", f"Downloaded video to {path}")
+            print(f"Processing video {video.video_id}")
+            log_writer.add_log("info", f"Processing video {video.video_id}")
             # Process the Video
             predictions, sentence, video_save_path_mp4 = (
                 await self.video_prediction.main(
@@ -107,12 +117,18 @@ class QueueService(object):
                     model=self.model,
                     video_path=path,
                     save_name=video.video_id,
+                    log_writer=log_writer,
                 )
             )
-
+            print(f"Processed video {video.video_id}")
+            log_writer.add_log("info", f"Processed video {video.video_id}")
+            print(f"Starting upload to Cloudinary.")
+            log_writer.add_log("info", f"Starting upload to Cloudinary.")
             # Upload the Video to Cloudinary
             upload_path = cloudinary_service.upload_video(video_save_path_mp4)
 
+            print("Updating mongoDB")
+            log_writer.add_log("info", "Updating mongoDB")
             # Update the Video Status
             self.mongo_service.update_collection(
                 video_id=video.video_id,
@@ -122,9 +138,20 @@ class QueueService(object):
 
             # Delete files
             cloudinary_service.cleanup()
+
+            print(f"Finished processing video: {video.video_id}")
+            log_writer.add_log("info", f"Finished processing video: {video.video_id}")
         except ApiException as e:
+            self.mongo_service.update_video_status(video.video_id, "failed")
+            log_writer.add_log(
+                "error", f"Failed to process video: {video.video_id}\n {str(e)}"
+            )
             raise e
         except Exception as e:
+            self.mongo_service.update_video_status(video.video_id, "failed")
+            log_writer.add_log(
+                "error", f"Failed to process video: {video.video_id}\n {str(e)}"
+            )
             raise ApiException(
                 message="Failed to process video.", status_code=500, details=str(e)
             )

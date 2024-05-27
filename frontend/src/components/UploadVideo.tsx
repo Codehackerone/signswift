@@ -5,6 +5,7 @@ import ReactPlayer from "react-player";
 import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 export default function UploadVideo() {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
   const [file, setFile] = useState<File | string>("");
   const [videoURL, setVideoURL] = useState<string | undefined>(undefined);
   const [processedVideoId, setProcessedVideoId] = useState<string>("");
@@ -18,21 +19,18 @@ export default function UploadVideo() {
   const [newUpload, setNewUpload] = useState<boolean>(false);
   const [fileUploadStyle, setFileUploadStyle] = useState<{}>({});
   const [mouseOver, setMouseOver] = useState<boolean>(false);
+  const [fileName, setFileName] = useState("");
 
   const handleUpload = async (e: React.MouseEvent<HTMLElement>) => {
     const formData = new FormData();
     formData.append("file", file);
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        "http://127.0.0.1:8080/api/videos",
-        formData,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("currentuser"),
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "/api/videos", formData, {
+        headers: {
+          "x-access-token": localStorage.getItem("currentuser"),
+        },
+      });
       setVideoURL(response.data.url);
       setProcessedVideoId(response.data.videoId);
       setIsLoading(false);
@@ -67,15 +65,11 @@ export default function UploadVideo() {
     formData.append("file", file);
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        "http://127.0.0.1:8080/api/videos",
-        formData,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("currentuser"),
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "/api/videos", formData, {
+        headers: {
+          "x-access-token": localStorage.getItem("currentuser"),
+        },
+      });
       setVideoURL(response.data.url);
       setIsLoading(false);
       setUploaded(true);
@@ -93,7 +87,7 @@ export default function UploadVideo() {
   const handleProcessing = async () => {
     setProcessing(true);
     try {
-      const response = await axios.get("http://127.0.0.1:8080/api/videos", {
+      const response = await axios.get(apiUrl + "/api/videos", {
         headers: {
           "x-access-token": localStorage.getItem("currentuser"),
         },
@@ -181,13 +175,18 @@ export default function UploadVideo() {
               accept="video/*"
               onChange={async (e) => {
                 setFile(e.target.files ? e.target.files[0] : "");
+                setFileName(e.target.files ? e.target.files[0].name : "");
               }}
             />
             <label htmlFor="FileUpload" className="FileUploadLabel">
               <UploadOutlined
-                style={{ fontSize: "1em", marginRight: "10px" }}
+              // style={{ fontSize: "1em", marginRight: "10px" }}
               />
-              <span className="FileUploadText">Upload File</span>
+              <span className="FileUploadText">
+                <span className="FileUploadText">
+                  {fileName === "" ? "Upload Video" : fileName}
+                </span>
+              </span>
             </label>
           </div>
           <button
@@ -263,8 +262,10 @@ export default function UploadVideo() {
       <div className="VideoResult">
         {videoSentenceTillNow !== "" && (
           <div className="VideoSentenceTillNow">
-            Analysing video....  {videoSentenceTillNow}
-            <span>{!afterProcessing && "("+processVideoDetails.length+"secs)"}</span>
+            Analysing video.... {videoSentenceTillNow}
+            <span>
+              {!afterProcessing && "(" + processVideoDetails.length + "secs)"}
+            </span>
           </div>
         )}
         {videoFinalSentence !== "" && (

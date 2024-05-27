@@ -14,11 +14,8 @@ interface currentHistoryType {
   status?: string;
 }
 export default function History() {
-  // const apiUrl = process.env.REACT_APP_BACKEND_URL;
-  const apiUrl = "https://signswift-api.soumyajitdatta.in";
-  // const llmUrl = process.env.REACT_APP_LLM_API;
-  const llmUrl =
-    "https://carpet-portal-athletes-lay.trycloudflare.com/v1/chat/completions";
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
+  const llmUrl = process.env.REACT_APP_LLM_API;
   const [userVideoUrls, setUserVideoUrls] = useState<any[]>([]);
   const [translateWord, settranslateWord] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -194,10 +191,38 @@ export default function History() {
     return () => clearInterval(interval);
   }, [currentHistory]);
 
+  // useEffect(() => {
+  //   let i = 0;
+  //   try {
+  //     // const interval = setInterval(() => {
+  //     //   setTranslatedHistory(currentHistory.ProcessedData[i].sentence_till_now);
+  //     //   setTimeout(() => {
+  //     //     setTranslatedHistory(
+  //     //       currentHistory.ProcessedData[i++].llm_prediction
+  //     //     );
+  //     //   }, 500);
+  //     // }, 1000);
+
+  //     (async ()=>{
+  //       currentHistory.ProcessedData.forEach(async (word)=>{
+  //         setTimeout(()=>{
+  //           setTranslatedHistorySentence(word.sentence_till_now);
+  //           setTranslatedHistoryLLm(word.llm_prediction);
+  //         },word.current_duration*1000);
+  //       });
+  //     })();
+  //     // setTimeout(() => {
+  //     //   clearInterval(interval);
+  //     // }, currentHistory.ProcessedData.length * 1000);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, [currentHistory]);
   return (
     <div className="History">
       <div className="HistoryCards">
         {userVideoUrls.map((video) => {
+          // if (video.processed_video_uri !== "") {
           return (
             <Card
               hoverable
@@ -211,6 +236,7 @@ export default function History() {
                 fontFamily: "Play",
               }}
               onClick={() => {
+                // console.log(video);
                 setCurrentHistory({
                   Heading: video.video_uri,
                   Url: video.processed_video_uri,
@@ -222,6 +248,8 @@ export default function History() {
             >
               <p style={{ margin: 0, fontSize: "1.2rem" }}>{}</p>
               <p style={{ margin: 0 }}>
+                {/* {video.url.substring(0, 30) + ". . ."}
+                 */}
                 {video.name ?? "Uploaded Video"}({video.status})
               </p>
             </Card>
@@ -295,6 +323,7 @@ export default function History() {
                     LLM Predicted :- {TranslatedHistoryLLm}
                   </div>
                 </div>
+
               </div>
             </div>
           )}{" "}

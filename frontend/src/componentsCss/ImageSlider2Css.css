@@ -23,8 +23,11 @@
   font-size: 30px;
   font-weight: bolder;
 }
-.hello,.how,.are,.you{
-    display: flex;
+.hello,
+.how,
+.are,
+.you {
+  display: flex;
 }
 .ImgSlide2ExtraInfo {
   position: absolute;

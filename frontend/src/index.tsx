@@ -7,18 +7,18 @@ import { BrowserRouter } from "react-router-dom";
 // import { ConfigProvider } from 'antd';
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    {/* <ConfigProvider theme={{ hashed: false }}> */}
+      {/* <ConfigProvider theme={{ hashed: false }}> */}
 
       <App />
-    {/* </ConfigProvider> */}
+      {/* </ConfigProvider> */}
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

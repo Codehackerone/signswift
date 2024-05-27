@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Viewer - ML Backend</title>
+    <script>
+        async function fetchLogs() {
+            try {
+                const response = await fetch('/display-logs');
+                const logs = await response.json();
+                const logContainer = document.getElementById('log-container');
+                logContainer.innerHTML = '';                
+                logs.content.forEach(log => {
+                    const logElement = document.createElement('div');
+                    logElement.textContent = `[${log.type.toUpperCase()}] ${log.message}`;
+                    logContainer.appendChild(logElement);
+                });
+                logContainer.scrollTop = logContainer.scrollHeight;
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+            }
+        }
+
+        function startFetchingLogs() {
+            fetchLogs();
+            setInterval(fetchLogs, 500);
+        }
+
+        window.onload = startFetchingLogs;
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        #log-container {
+            white-space: pre-wrap;
+            background: #f4f4f4;
+            padding: 20px;
+            border: 1px solid #ddd;
+            height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Log Viewer</h1>
+    <div id="log-container">Loading logs...</div>
+</body>
+</html>

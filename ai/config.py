@@ -142,8 +142,14 @@ p2s_map = {
 }
 
 
-def PROMPT(sentence):
-    return f"\nYou are given a sentence that are recognized by a sign language interpreter.\nUse pronouns, adverbs to complete the sentence, or rearrange the words and make something that makes sense. \nDo not include any other information in the output and return only one sentence.\n\nSentence: {sentence}\nAnswer:\n"
+def PROMPT(text):
+    return f"""
+  You are given a sentence that are recognized by a sign language interpreter.
+  Use pronouns, adverbs to complete the sentence, or rearrange the words and make something that makes sense. 
+  Do not include any other information in the output and return only one sentence.
+
+  Sentence: {text}
+  Answer:"""
 
 
 STATUS_CODES = {

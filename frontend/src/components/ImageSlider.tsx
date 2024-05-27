@@ -11,7 +11,7 @@ export default function ImageSlider() {
         <img
           src={ImageSliderBg1}
           alt=""
-          style={{ width: "21%", height: "100%", marginLeft: "10%", }}
+          style={{ width: "21%", height: "100%", marginLeft: "10%" }}
         />
         <div
           className="d-flex flex-column align-items-center justify-content-evenly"
