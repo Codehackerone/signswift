@@ -74,6 +74,7 @@
 }
 .HistoryTranslation {
   width: 100%;
+  height: 40%;
   /* background-color: blue; */
   color: white;
   font-family: "Play";
@@ -83,7 +84,60 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  column-gap: 2%;
+  column-gap: 1%;
+}
+.LanguageSelectTranslation{
+  /* border: 2px solid black; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  row-gap: 5%;
+  width: 45%;
+  height: 100%;
+  padding: 10px;
+  box-shadow: inset 0px 0px 5px 0px grey;
+  border-radius: 10px;
+}
+.LanguageSelection{
+  display: flex;
+  flex-direction: row;
+  /* row-gap: 5%; */
+  column-gap: 5%;
+}
+.Translation{
+  overflow-y: scroll;
+}
+.Translation::-webkit-scrollbar{
+  display: none;
+}
+.RawLLmPredeiction{
+  /* border: 2px solid black; */
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5%;
+  /* box-shadow: inset 0px 0px 5px 0px grey; */
+  border-radius: 10px;
+}
+.RawPreddiction{
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  box-shadow: inset 0px 0px 5px 0px grey;
+  border-radius: 10px;
+  padding: 7px;
+  height: 50%;
+}
+.LLmPrediction{
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  box-shadow: inset 0px 0px 5px 0px grey;
+  height: 50%;
+  border-radius: 10px;
+  padding: 7px;
 }
 .WordTillNow {
   width: 50%;

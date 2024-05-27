@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../componentsCss/HistoryCss.css";
-import { Card, Select, Button } from "antd";
+import { Card, Select, Button, ConfigProvider } from "antd";
 import axios from "axios";
 import ReactPlayer from "react-player";
 import { CopyOutlined } from "@ant-design/icons";
@@ -170,7 +170,7 @@ export default function History() {
             } else {
               setTranslatedHistoryLLm(
                 predObject.ProcessedData[wordMapper[allDurations[i]]]
-                  .llm_prediction,
+                  .llm_prediction
               );
             }
             try {
@@ -254,36 +254,9 @@ export default function History() {
               </p>
             </Card>
           );
-          // }
         })}
       </div>
       <div className="HistoryCardDetails">
-        {/* {currentHistory.Heading !== "" && (
-          <h3 style={{ color: "white", fontFamily: "Play" }}>
-            <span style={{ marginRight: "3%" }}>
-              {currentHistory.Url.substring(0, 73) + ". . ."}
-            </span>
-            <span
-              className="copyToClipBoard"
-              onClick={async () => {
-                await window.navigator.clipboard.writeText(currentHistory.Url);
-                (
-                  document.getElementById(
-                    "AfterCopyToClipBoard",
-                  ) as HTMLObjectElement
-                ).style.display = "block";
-                setTimeout(() => {
-                  document.getElementById(
-                    "AfterCopyToClipBoard",
-                  )!.style.display = "none";
-                }, 1500);
-              }}
-            >
-              <CopyOutlined />
-              <div id="AfterCopyToClipBoard">Copied To Clip Board</div>
-            </span>
-          </h3>
-        )} */}
         {!loading &&
           currentHistory.Heading !== "" &&
           currentHistory.status === "processed" && (
@@ -297,70 +270,60 @@ export default function History() {
                   controls={true}
                   playing={false}
                   ref={playerRef}
-                  // onProgress={handleProgress}
                 ></ReactPlayer>
               </div>
               <div className="HistoryTranslation">
-                <Select
-                  defaultValue="select"
-                  style={{ width: 120 }}
-                  onChange={handleChange}
-                  options={[
-                    { value: "select", label: "Select Language" },
-                    { value: "french", label: "French" },
-                    { value: "hindi", label: "Hindi" },
-                    { value: "bengali", label: "Bengali" },
-                    { value: "german", label: "German" },
-                    { value: "spanish", label: "Spanish" },
-                    { value: "japanese", label: "Japanese" },
-                    { value: "korean", label: "Korean" },
-                    { value: "chinese", label: "Chinese" },
-                    { value: "arabic", label: "Arabic" },
-                  ]}
-                />
-                <Button
-                  type="primary"
-                  onClick={async () => {
-                    await handleTranslate();
-                  }}
-                >
-                  Translate
-                </Button>
-                {/* <Button
-                    type="primary"
-                    onClick={async () => {
-                      try {
-                        const response = await axios.post(
-                          apiUrl + "/api/translate",
-                          {
-                            text: TranslatedHistorySentence,
-                            target: translateWord,
-                          },
-                          {
-                            headers: {
-                              "x-access-token": localStorage.getItem("currentuser"),
-                            },
-                          },
-                        );
-                        setTranslatedHistorySentence(response.data.translated_text);
-                      } catch (error) {
-                        console.log(error);
-                      }
-                    }}
-                    /> */}
-                <br />
-                <br />
-                Raw Predictions:- {TranslatedHistorySentence}
-                <br />
-                LLM Predicted :- {TranslatedHistoryLLm}
-                <br />
-                Translated Text :- {TranslatedText}
-                {/* <div className="WordTillNow">
-                  
+                <div className="LanguageSelectTranslation">
+                  <div className="LanguageSelection">
+                    <ConfigProvider
+                      theme={{
+                        token: {
+                          fontSize: 18,
+                          fontFamily: "Play",
+                        },
+                      }}
+                    >
+                      <Select
+                        defaultValue="select"
+                        style={{ width: 200 }}
+                        onChange={handleChange}
+                        options={[
+                          { value: "select", label: "Select Language" },
+                          { value: "french", label: "French" },
+                          { value: "hindi", label: "Hindi" },
+                          { value: "bengali", label: "Bengali" },
+                          { value: "german", label: "German" },
+                          { value: "spanish", label: "Spanish" },
+                          { value: "japanese", label: "Japanese" },
+                          { value: "korean", label: "Korean" },
+                          { value: "chinese", label: "Chinese" },
+                          { value: "arabic", label: "Arabic" },
+                        ]}
+                      />
+                      <Button
+                        type="primary"
+                        onClick={async () => {
+                          await handleTranslate();
+                        }}
+                      >
+                        Translate
+                      </Button>
+                    </ConfigProvider>
+                  </div>
+                  <div className="Translation">
+                    <div>Translated Text :-</div>
+                    <div className="TranslatedText">{TranslatedText}</div>
+                  </div>
                 </div>
-                <div className="FullSentence">
-                  
-                </div> */}
+                <div className="RawLLmPredeiction">
+                  <div className="RawPreddiction">
+                    Raw Predictions:- {TranslatedHistorySentence}
+                  </div>
+                  <div className="LLmPrediction">
+                    LLM Predicted :- {TranslatedHistoryLLm}
+                  </div>
+                </div>
+
               </div>
             </div>
           )}{" "}
